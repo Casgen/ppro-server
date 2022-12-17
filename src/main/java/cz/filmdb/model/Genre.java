@@ -1,12 +1,19 @@
 package cz.filmdb.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Set;
 
 // WATCH OUT FOR DUPLICATE IMPORTS OR IMPORTS LIKE THESE, THEY CAN OVERRIDE YOUR BEANS!
 // import org.springframework.data.relational.core.mapping.Table;
 
+@Setter
+@Getter
 @Table
-@Entity(name = "genre")
+@Entity
 public class Genre {
 
     @Id
@@ -20,6 +27,11 @@ public class Genre {
     )
     public Long id;
     public String name;
+
+
+    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
+    @JsonBackReference
+    public Set<Filmwork> filmworks;
 
     public Genre(String name) {
         this.name = name;
@@ -50,4 +62,11 @@ public class Genre {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Genre{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
