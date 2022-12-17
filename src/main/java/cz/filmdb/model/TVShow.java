@@ -1,56 +1,58 @@
 package cz.filmdb.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Date;
-import java.util.ArrayList;
+import java.util.Set;
 
+@Setter
+@Getter
 @Entity
-@Table(name = "tv_show")
-public class TVShow {
+public class TVShow extends Filmwork {
 
-    @Id
-    @SequenceGenerator(
-            sequenceName = "tv_show_sequence",
-            name = "tv_show_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.AUTO,
-            generator = "tv_show_sequence"
-    )
-    private Long id;
+    @Column(name = "number_of_seasons")
     private int numberOfSeasons;
+
+    @Column(name = "running_from")
     private Date runningFrom;
+
+    @Column(name = "running_to")
     private Date runningTo;
 
-    public TVShow(Long id, int numberOfSeasons, Date runningFrom, ArrayList<Person> creators) {
-        this.id = id;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "tvshow_creator",
+            joinColumns = {
+                    @JoinColumn(name = "tvshow_id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "creator_id")
+            }
+    )
+    @JsonManagedReference
+    private Set<Person> creators;
+
+    public TVShow(String name, Set<Genre> genres, Set<Person> creators, int numberOfSeasons, Date runningFrom) {
+        super(name, genres);
         this.numberOfSeasons = numberOfSeasons;
         this.runningFrom = runningFrom;
         this.creators = creators;
     }
 
-    public TVShow(int numberOfSeasons, Date runningFrom, ArrayList<Person> creators) {
+    public TVShow(String name, int numberOfSeasons, Set<Person> creators) {
+        super();
         this.numberOfSeasons = numberOfSeasons;
         this.runningFrom = runningFrom;
         this.creators = creators;
     }
 
-    @ManyToMany
-    private ArrayList<Person> creators;
 
     public TVShow() {
 
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public int getNumberOfSeasons() {
         return numberOfSeasons;
@@ -76,11 +78,11 @@ public class TVShow {
         this.runningTo = runningTo;
     }
 
-    public ArrayList<Person> getCreators() {
+    public Set<Person> getCreators() {
         return creators;
     }
 
-    public void setCreators(ArrayList<Person> creators) {
+    public void setCreators(Set<Person> creators) {
         this.creators = creators;
     }
 

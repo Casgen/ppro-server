@@ -1,39 +1,37 @@
 package cz.filmdb.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.ArrayList;
+import java.util.Set;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "movie")
-public class Movie {
+public class Movie extends Filmwork {
 
-    @Id
-    @SequenceGenerator(
-            sequenceName = "movie_sequence",
-            name = "movie_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.AUTO,
-            generator = "movie_sequence"
-    )
-    public Long id;
-    @OneToOne
-    public FilmWork filmWork;
+    @Column(nullable = false, name = "year_of_release")
     public int yearOfRelease;
-    @ManyToMany
-    public ArrayList<Person> directors;
 
-    public Movie(FilmWork filmWork, int yearOfRelease, ArrayList<Person> directors) {
-        this.filmWork = filmWork;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "movie_director",
+            joinColumns = {
+                    @JoinColumn(name = "movie_id", referencedColumnName = "fid"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "director_id", referencedColumnName = "id")
+            }
+    )
+    public Set<Person> directors;
+
+    public Movie(String name, int yearOfRelease, Set<Genre> genres) {
+        super(name, genres);
         this.yearOfRelease = yearOfRelease;
-        this.directors = directors;
     }
 
-    public Movie(Long id, FilmWork filmWork, int yearOfRelease, ArrayList<Person> directors) {
-        this.id = id;
-        this.filmWork = filmWork;
+    public Movie(String name, int yearOfRelease, Set<Genre> genres, Set<Person> directors) {
+        super(name, genres);
         this.yearOfRelease = yearOfRelease;
         this.directors = directors;
     }
@@ -42,36 +40,16 @@ public class Movie {
 
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "yearOfRelease=" + yearOfRelease +
+                ", directors=" + directors +
+                ", id=" + fid +
+                ", name='" + name + '\'' +
+                ", audienceScore=" + audienceScore +
+                ", criticsScore=" + criticsScore +
+                ", genres=" + genres +
+                '}';
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public FilmWork getFilmWork() {
-        return filmWork;
-    }
-
-    public void setFilmWork(FilmWork filmWork) {
-        this.filmWork = filmWork;
-    }
-
-    public int getYearOfRelease() {
-        return yearOfRelease;
-    }
-
-    public void setYearOfRelease(int yearOfRelease) {
-        this.yearOfRelease = yearOfRelease;
-    }
-
-    public ArrayList<Person> getDirectors() {
-        return directors;
-    }
-
-    public void setDirectors(ArrayList<Person> directors) {
-        this.directors = directors;
-    }
-
 }
