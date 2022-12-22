@@ -1,6 +1,6 @@
 package cz.filmdb.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,11 +30,9 @@ public class Person {
     @Column(name = "last_name")
     private String lastName;
 
-
-    @ManyToMany(mappedBy = "directors")
-    @JsonBackReference
-    private Set<Movie> movies;
-
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<Occupation> casting;
 
     public Person(Long id, String firstName, String lastName) {
         this.id = id;

@@ -23,16 +23,16 @@ public class Filmwork {
             strategy = GenerationType.SEQUENCE,
             generator = "filmwork_sequence"
     )
-    public Long fid;
+    protected Long fid;
 
     @Column(nullable = false)
-    public String name;
+    protected String name;
 
-    @Column(name = "audience_score")
-    public float audienceScore;
+    @Column(name = "audience_score", nullable = true)
+    protected float audienceScore;
 
-    @Column(name = "critics_score")
-    public float criticsScore;
+    @Column(name = "critics_score", nullable = true)
+    protected float criticsScore;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "filmwork_genre",
@@ -44,17 +44,34 @@ public class Filmwork {
             }
     )
     @JsonManagedReference
-    public Set<Genre> genres;
+    protected Set<Genre> genres;
+
+    @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    protected Set<Occupation> occupation;
 
     public Filmwork(String name, Set<Genre> genres) {
         this.name = name;
         this.genres = genres;
+        this.occupation = Set.of();
+        this.audienceScore = 0.f;
+        this.criticsScore = 0.f;
+    }
+
+    public Filmwork(String name) {
+        this.name = name;
+        this.genres = Set.of();
+        this.occupation = Set.of();
+        this.audienceScore = 0.f;
+        this.criticsScore = 0.f;
     }
 
     public Filmwork(Long fid, String name, Set<Genre> genres) {
         this.fid = fid;
         this.name = name;
         this.genres = genres;
+        this.audienceScore = 0.f;
+        this.criticsScore = 0.f;
     }
 
     public Filmwork() {
