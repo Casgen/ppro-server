@@ -1,55 +1,48 @@
 package cz.filmdb.model;
 
+import cz.filmdb.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 @Getter
 @Setter
 @Entity
 public class Movie extends Filmwork {
 
-    @Column(nullable = false, name = "year_of_release")
-    public int yearOfRelease;
+    @Column(nullable = false, name = "release_date")
+    public LocalDate releaseDate;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "movie_director",
-            joinColumns = {
-                    @JoinColumn(name = "movie_id", referencedColumnName = "fid"),
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "director_id", referencedColumnName = "id")
-            }
-    )
-    public Set<Person> directors;
-
-    public Movie(String name, int yearOfRelease, Set<Genre> genres) {
+    public Movie(String name, LocalDate releaseDate, Set<Genre> genres) {
         super(name, genres);
-        this.yearOfRelease = yearOfRelease;
+        this.releaseDate = releaseDate;
     }
 
-    public Movie(String name, int yearOfRelease, Set<Genre> genres, Set<Person> directors) {
+    public Movie(String name, LocalDate releaseDate, Set<Genre> genres, Set<Occupation> occupation) {
         super(name, genres);
-        this.yearOfRelease = yearOfRelease;
-        this.directors = directors;
+        this.releaseDate = releaseDate;
+        this.occupation = occupation;
     }
 
-    public Movie() {
+    public Movie() {}
 
+    public void setOccupation(Map<Person,List<RoleType>> map) {
+        this.occupation = Occupation.of(this, map);
     }
 
     @Override
     public String toString() {
         return "Movie{" +
-                "yearOfRelease=" + yearOfRelease +
-                ", directors=" + directors +
-                ", id=" + fid +
+                "releaseDate=" + releaseDate +
+                ", fid=" + fid +
                 ", name='" + name + '\'' +
                 ", audienceScore=" + audienceScore +
                 ", criticsScore=" + criticsScore +
                 ", genres=" + genres +
+                ", cast=" + occupation +
                 '}';
     }
 }

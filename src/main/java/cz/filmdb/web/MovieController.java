@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/movie/")
+@RequestMapping("api/v1/movies/")
 public class MovieController {
 
     private MovieService movieService;
@@ -36,9 +36,10 @@ public class MovieController {
         throw new InvalidParameterException("Id is either null or invalid!");
     }
 
-    @GetMapping("getMoviesByGenre")
-    public List<Movie> getMoviesByGenre(@RequestParam(name = "genres") List<Long> genreIds) {
+    @GetMapping("getMoviesByGenres")
+    public List<Movie> getMoviesByGenres(@RequestParam(name = "genres") List<Long> genreIds) {
         if (genreIds.isEmpty()) return List.of();
+
         return movieService.getMoviesByGenres(genreIds);
     }
 }
