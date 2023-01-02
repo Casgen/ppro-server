@@ -1,8 +1,11 @@
 package cz.filmdb.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Setter
 @Getter
@@ -26,6 +29,10 @@ public class User {
     @Column(unique = true)
     public String email;
     public String password;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonManagedReference
+    public Set<Review> userReviews;
 
     public User(String username, String email, String password) {
         this.username = username;

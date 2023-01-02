@@ -29,9 +29,6 @@ public class Movie extends Filmwork {
 
     public Movie() {}
 
-    public void setOccupation(Map<Person,List<RoleType>> map) {
-        this.occupation = Occupation.of(this, map);
-    }
 
     @Override
     public String toString() {

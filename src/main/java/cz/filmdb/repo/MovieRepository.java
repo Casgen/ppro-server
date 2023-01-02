@@ -13,11 +13,9 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
 
     List<Movie> findMoviesByName(String name);
 
-    List<Movie> getAllByOrderByAudienceScore();
-
-    List<Movie> findMoviesByAudienceScoreGreaterThanEqual(float score);
-
-    List<Movie> findMoviesByAudienceScoreLessThanEqual(float score);
+    //List<Movie> getAllByOrderByAudienceScore();
+    //List<Movie> findMoviesByAudienceScoreGreaterThanEqual(float score);
+    //List<Movie> findMoviesByAudienceScoreLessThanEqual(float score);
 
     @Query("SELECT DISTINCT m, genre.name FROM Movie m JOIN m.genres genre JOIN genre.filmworks filmwork WHERE genre.id IN (:genreIds)")
     List<Movie> findMoviesByGenres(@Param("genreIds") List<Long> id);
