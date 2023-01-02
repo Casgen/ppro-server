@@ -1,14 +1,8 @@
 package cz.filmdb.conf;
 
 import cz.filmdb.enums.RoleType;
-import cz.filmdb.model.Genre;
-import cz.filmdb.model.Movie;
-import cz.filmdb.model.Occupation;
-import cz.filmdb.model.Person;
-import cz.filmdb.repo.GenreRepository;
-import cz.filmdb.repo.MovieRepository;
-import cz.filmdb.repo.OccupationRepository;
-import cz.filmdb.repo.PersonRepository;
+import cz.filmdb.model.*;
+import cz.filmdb.repo.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +15,9 @@ public class FlmDBConfig {
 
     @Bean
     CommandLineRunner commandLineRunner(MovieRepository movieRepository, GenreRepository genreRepository,
-                                        PersonRepository personRepository, OccupationRepository occupationRepository) {
+                                        PersonRepository personRepository, OccupationRepository occupationRepository,
+                                        UserRepository userRepository, ReviewRepository reviewRepository,
+                                        FilmWorkRepository filmWorkRepository) {
         return args -> {
 
             List<Person> people = new ArrayList<>();
@@ -43,6 +39,17 @@ public class FlmDBConfig {
             Person jamesCameron = new Person("James", "Cameron");
             Person samWorthington = new Person("Sam", "Worthington");
             Person zoeSaldana = new Person("Zoe", "Saldana");
+
+            List<User> users = new ArrayList<>();
+
+            User basicJoe = new User("basicjoe231", "basic.joe@gmail.com", "123456");
+            User mckinsley = new User("mckinsley", "mckinsley87@gmail.com", "123456");
+            User elenorRigby = new User("elenorRigby", "elenor.Rigby@gmail.com", "3890jdfhs");
+
+            users.add(basicJoe);
+            users.add(mckinsley);
+            users.add(elenorRigby);
+            userRepository.saveAll(users);
 
             people.add(ridleyScott);
             people.add(sigourneyWeaver);
@@ -82,11 +89,11 @@ public class FlmDBConfig {
 
 
             //Movies
-            Movie alien = new Movie("Alien", LocalDate.of(1979,3,13), Set.of(scifi, horror));
-            Movie killBill = new Movie("Kill Bill Vol. 1", LocalDate.of(2003, 9, 29), Set.of(action,crime,drama));
-            Movie avatar = new Movie("Avatar", LocalDate.of(2009, 9, 23), Set.of(action, scifi));
+            Filmwork alien = new Movie("Alien", LocalDate.of(1979,3,13), Set.of(scifi, horror));
+            Filmwork killBill = new Movie("Kill Bill Vol. 1", LocalDate.of(2003, 9, 29), Set.of(action,crime,drama));
+            Filmwork avatar = new Movie("Avatar", LocalDate.of(2009, 9, 23), Set.of(action, scifi));
 
-            movieRepository.saveAll(List.of(alien,killBill,avatar));
+            filmWorkRepository.saveAll(List.of(alien,killBill,avatar));
 
             //Filmwork occupations
             Map<Person, List<RoleType>> alienOccupations = new HashMap<>();
@@ -113,13 +120,23 @@ public class FlmDBConfig {
             avatarOccupations.put(samWorthington, List.of(RoleType.ACTOR));
             avatarOccupations.put(zoeSaldana, List.of(RoleType.ACTOR));
 
+            alien.setOccupation(alienOccupations);
+            avatar.setOccupation(avatarOccupations);
+            killBill.setOccupation(killBillOccupations);
+
             occupationRepository.saveAll(Occupation.of(alien,alienOccupations));
             occupationRepository.saveAll(Occupation.of(killBill,killBillOccupations));
             occupationRepository.saveAll(Occupation.of(avatar,avatarOccupations));
 
-            alien.setOccupation(alienOccupations);
-            avatar.setOccupation(avatarOccupations);
-            killBill.setOccupation(killBillOccupations);
+            List<Review> reviews = new ArrayList<>();
+
+            reviews.add(new Review(basicJoe, alien, "What a banger film.", 10.0f));
+            reviews.add(new Review(elenorRigby, killBill, "One of the goriest tarantino movies.", 9.7f));
+            reviews.add(new Review(mckinsley, killBill, "Classic.", 9.0f));
+            reviews.add(new Review(mckinsley, avatar, "ngl, kinda mid.", 5.0f));
+            reviews.add(new Review(basicJoe, avatar, "cringey.", 2.3f));
+
+            reviewRepository.saveAll(reviews);
         };
     }
 }

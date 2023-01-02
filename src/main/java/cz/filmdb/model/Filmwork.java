@@ -1,11 +1,12 @@
 package cz.filmdb.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import cz.filmdb.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.*;
 
 @Setter
 @Getter
@@ -28,8 +29,8 @@ public class Filmwork {
     @Column(nullable = false)
     protected String name;
 
-    @Column(name = "audience_score", nullable = true)
-    protected float audienceScore;
+    @Transient
+    protected transient float audienceScore;
 
     @Column(name = "critics_score", nullable = true)
     protected float criticsScore;
@@ -50,11 +51,14 @@ public class Filmwork {
     @JsonManagedReference
     protected Set<Occupation> occupation;
 
+    @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    protected Set<Review> reviews;
+
     public Filmwork(String name, Set<Genre> genres) {
         this.name = name;
         this.genres = genres;
         this.occupation = Set.of();
-        this.audienceScore = 0.f;
         this.criticsScore = 0.f;
     }
 
@@ -62,7 +66,6 @@ public class Filmwork {
         this.name = name;
         this.genres = Set.of();
         this.occupation = Set.of();
-        this.audienceScore = 0.f;
         this.criticsScore = 0.f;
     }
 
@@ -70,12 +73,27 @@ public class Filmwork {
         this.fid = fid;
         this.name = name;
         this.genres = genres;
-        this.audienceScore = 0.f;
         this.criticsScore = 0.f;
     }
 
     public Filmwork() {
 
+    }
+
+    public float getAudienceScore() {
+        List<Review> reviewList = new ArrayList<>(reviews);
+        reviewList.sort(new SortByAudienceScore());
+
+        float middleIndex = reviewList.size()/2.f;
+
+        if ((reviewList.size() % 2) != 0) return reviewList.get((int) middleIndex).getScore();
+
+        return (reviewList.get((int) middleIndex).getScore() + reviewList.get((int) middleIndex-1).getScore()) / 2.f;
+
+    }
+
+    public void setOccupation(Map<Person,List<RoleType>> map) {
+        this.occupation = Occupation.of(this, map);
     }
 
     @Override
@@ -87,5 +105,12 @@ public class Filmwork {
                 ", criticsScore=" + criticsScore +
                 ", genres=" + genres +
                 '}';
+    }
+}
+
+class SortByAudienceScore implements Comparator<Review> {
+    @Override
+    public int compare(Review o1, Review o2) {
+        return Float.compare(o1.getScore(),o2.getScore());
     }
 }
