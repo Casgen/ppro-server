@@ -28,7 +28,7 @@ public class GenreController {
         return genreService.getAllGenres();
     }
 
-    @GetMapping("/search/")
+    @GetMapping("/search")
     public List<Genre> searchGenresByQuery(@RequestParam String query) {
         return genreService.searchGenres(query);
     }

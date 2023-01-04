@@ -28,12 +28,10 @@ public class Occupation {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "filmwork_id", nullable = false)
-    @JsonBackReference
     private Filmwork filmwork;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "person_id", nullable = false)
-    @JsonBackReference
     private Person person;
 
     @Enumerated(EnumType.STRING)

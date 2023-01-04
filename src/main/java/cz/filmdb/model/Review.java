@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table
@@ -31,23 +32,21 @@ public class Review {
         this.filmwork = filmwork;
         this.comment = comment;
         this.score = score;
-        this.date = LocalDate.now();
+        this.date = LocalDateTime.now();
     }
 
     public Review() {}
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
-    @JsonBackReference
     private User user;
 
     //Do not set the CascadeType here, it's supposed to be set only on the other side.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "filmwork_id")
-    @JsonBackReference
     private Filmwork filmwork;
 
-    private LocalDate date;
+    private LocalDateTime date;
     private String comment;
     private float score;
 

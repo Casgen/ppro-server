@@ -1,7 +1,13 @@
 package cz.filmdb.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import cz.filmdb.enums.RoleType;
+import cz.filmdb.serial.OccupationsSerializer;
+import cz.filmdb.serial.ReviewsSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,24 +54,31 @@ public class Filmwork {
     protected Set<Genre> genres;
 
     @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    protected Set<Occupation> occupation;
+    @JsonSerialize(using = OccupationsSerializer.class)
+    protected Set<Occupation> occupations;
 
     @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonSerialize(using = ReviewsSerializer.class)
     protected Set<Review> reviews;
 
     public Filmwork(String name, Set<Genre> genres) {
         this.name = name;
         this.genres = genres;
-        this.occupation = Set.of();
+        this.occupations = Set.of();
+        this.criticsScore = 0.f;
+    }
+
+    public Filmwork(String name, Set<Genre> genres, Set<Occupation> occupations) {
+        this.name = name;
+        this.genres = genres;
+        this.occupations = occupations;
         this.criticsScore = 0.f;
     }
 
     public Filmwork(String name) {
         this.name = name;
         this.genres = Set.of();
-        this.occupation = Set.of();
+        this.occupations = Set.of();
         this.criticsScore = 0.f;
     }
 
@@ -92,8 +105,8 @@ public class Filmwork {
 
     }
 
-    public void setOccupation(Map<Person,List<RoleType>> map) {
-        this.occupation = Occupation.of(this, map);
+    public void setOccupations(Map<Person,List<RoleType>> map) {
+        this.occupations = Occupation.of(this, map);
     }
 
     @Override
@@ -114,3 +127,4 @@ class SortByAudienceScore implements Comparator<Review> {
         return Float.compare(o1.getScore(),o2.getScore());
     }
 }
+

@@ -1,6 +1,8 @@
 package cz.filmdb.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import cz.filmdb.serial.ReviewsSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +33,7 @@ public class User {
     public String password;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    @JsonManagedReference
+    @JsonSerialize(using = ReviewsSerializer.class)
     public Set<Review> userReviews;
 
     public User(String username, String email, String password) {
