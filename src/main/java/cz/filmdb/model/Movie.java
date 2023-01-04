@@ -21,10 +21,9 @@ public class Movie extends Filmwork {
         this.releaseDate = releaseDate;
     }
 
-    public Movie(String name, LocalDate releaseDate, Set<Genre> genres, Set<Occupation> occupation) {
-        super(name, genres);
+    public Movie(String name, LocalDate releaseDate, Set<Genre> genres, Set<Occupation> occupations) {
+        super(name, genres, occupations);
         this.releaseDate = releaseDate;
-        this.occupation = occupation;
     }
 
     public Movie() {}
@@ -39,7 +38,7 @@ public class Movie extends Filmwork {
                 ", audienceScore=" + audienceScore +
                 ", criticsScore=" + criticsScore +
                 ", genres=" + genres +
-                ", cast=" + occupation +
+                ", cast=" + occupations +
                 '}';
     }
 }

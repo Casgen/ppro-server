@@ -120,9 +120,9 @@ public class FlmDBConfig {
             avatarOccupations.put(samWorthington, List.of(RoleType.ACTOR));
             avatarOccupations.put(zoeSaldana, List.of(RoleType.ACTOR));
 
-            alien.setOccupation(alienOccupations);
-            avatar.setOccupation(avatarOccupations);
-            killBill.setOccupation(killBillOccupations);
+            alien.setOccupations(alienOccupations);
+            avatar.setOccupations(avatarOccupations);
+            killBill.setOccupations(killBillOccupations);
 
             occupationRepository.saveAll(Occupation.of(alien,alienOccupations));
             occupationRepository.saveAll(Occupation.of(killBill,killBillOccupations));
