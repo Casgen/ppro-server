@@ -30,6 +30,12 @@ public class FilmDBServerApplication {
     //TODO: Alter this after getting into production!
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        //http.authorizeHttpRequests();
+                //.anyRequest();
+                //.authenticated()
+                //.and();
+                //.httpBasic();
+        http.cors();
         http.formLogin().successHandler(new AuthenticationSuccessHandler() {
             @Override
             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

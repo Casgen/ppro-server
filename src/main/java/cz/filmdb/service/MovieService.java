@@ -31,4 +31,7 @@ public class MovieService {
         return movieRepository.findMoviesByGenres(genreIds);
     }
 
+    public List<Movie> getLatestMovies() {
+        return movieRepository.findLatestMovies();
+    }
 }
