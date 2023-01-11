@@ -1,10 +1,7 @@
 package cz.filmdb.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import cz.filmdb.serial.CastingSerializer;
+import cz.filmdb.serial.PersonSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +12,7 @@ import java.util.Set;
 @Getter
 @Entity
 @Table
+@JsonSerialize(using = PersonSerializer.class)
 public class Person {
     @Id
     @SequenceGenerator(
@@ -35,7 +33,6 @@ public class Person {
     private String lastName;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    @JsonSerialize(using = CastingSerializer.class)
     private Set<Occupation> casting;
 
     public Person(Long id, String firstName, String lastName) {

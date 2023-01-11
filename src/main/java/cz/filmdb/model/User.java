@@ -1,8 +1,7 @@
 package cz.filmdb.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import cz.filmdb.serial.ReviewsSerializer;
+import cz.filmdb.serial.UserSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +12,7 @@ import java.util.Set;
 @Getter
 @Entity
 @Table
+@JsonSerialize(using = UserSerializer.class)
 public class User {
 
     @Id
@@ -33,7 +33,6 @@ public class User {
     public String password;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    @JsonSerialize(using = ReviewsSerializer.class)
     public Set<Review> userReviews;
 
     public User(String username, String email, String password) {

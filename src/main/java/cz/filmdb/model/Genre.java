@@ -1,8 +1,8 @@
 package cz.filmdb.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import cz.filmdb.serial.FilmworksSerializer;
+import cz.filmdb.serial.FilmworkSerializer;
+import cz.filmdb.serial.GenreSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +16,7 @@ import java.util.Set;
 @Getter
 @Table
 @Entity
+@JsonSerialize(using = GenreSerializer.class)
 public class Genre {
 
     @Id
@@ -27,13 +28,13 @@ public class Genre {
             strategy = GenerationType.AUTO,
             generator = "genre_sequence"
     )
-    public Long id;
+    private Long id;
 
-    public String name;
+    private String name;
 
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
-    @JsonSerialize(using = FilmworksSerializer.class)
-    public Set<Filmwork> filmworks;
+    @JsonSerialize(using = FilmworkSerializer.class)
+    private Set<Filmwork> filmworks;
 
     public Genre(String name) {
         this.name = name;
