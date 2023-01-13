@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/genres/")
+@CrossOrigin("http://localhost:5173")
 public class GenreController {
 
     private GenreService genreService;

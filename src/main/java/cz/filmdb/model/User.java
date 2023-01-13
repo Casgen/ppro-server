@@ -36,6 +36,8 @@ public class User implements UserDetails {
             generator = "user_sequence"
     )
     private Long id;
+
+    @Column(unique = true)
     private String username;
 
     @Column(unique = true)

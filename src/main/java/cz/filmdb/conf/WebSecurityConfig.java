@@ -40,7 +40,7 @@ public class WebSecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                  //These URLs won't require authentication
-                .requestMatchers("/api/v1/auth/**,")
+                .requestMatchers("/api/v1/auth/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -50,7 +50,7 @@ public class WebSecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        Annotation[] annotations = UserController.class.getAnnotations();
+        http.cors();
 
         return http.build();
     }
