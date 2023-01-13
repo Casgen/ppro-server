@@ -1,6 +1,5 @@
 package cz.filmdb.service;
 
-import cz.filmdb.model.Movie;
 import cz.filmdb.model.Person;
 import cz.filmdb.repo.MovieRepository;
 import cz.filmdb.repo.PersonRepository;
@@ -22,7 +21,7 @@ public class PersonService {
     }
 
 
-    public List<Person> getAllPeople() {
+    public List<Person> loadPeople() {
         return personRepository.findAll();
     }
 
@@ -36,7 +35,7 @@ public class PersonService {
         };
     }
 
-    public Person getPerson(Long id) {
+    public Person loadPerson(Long id) {
         Optional<Person> person; personRepository.findById(id);
 
         if ((person = personRepository.findById(id)).isEmpty())

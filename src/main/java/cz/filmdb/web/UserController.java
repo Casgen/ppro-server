@@ -3,14 +3,12 @@ package cz.filmdb.web;
 import cz.filmdb.model.User;
 import cz.filmdb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("api/v1/users/")
+@RestController("api/v1/users/")
+@CrossOrigin("http://localhost:5173")
 public class UserController {
 
     private UserService userService;
@@ -20,8 +18,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("getUsers")
+    @GetMapping
     public List<User> getUsers() {
-        return userService.getUsers();
+        return userService.loadUsers();
     }
+
+    @GetMapping("{id}")
+    public User getUser(@PathVariable String id) {
+        return userService.loadUserById(Long.parseLong(id)).orElse(null);
+    }
+
 }

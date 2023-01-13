@@ -3,17 +3,27 @@ package cz.filmdb.model;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import cz.filmdb.serial.UserSerializer;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Setter
 @Getter
 @Entity
+@Builder
 @Table
+@AllArgsConstructor
 @JsonSerialize(using = UserSerializer.class)
-public class User {
+// The needed getUsername() and getPassword() methods are already overridden by the lombok @Getter annotation
+public class User implements UserDetails {
 
     @Id
     @SequenceGenerator(
@@ -25,12 +35,16 @@ public class User {
             strategy = GenerationType.AUTO,
             generator = "user_sequence"
     )
-    public Long id;
-    public String username;
+    private Long id;
+    private String username;
 
     @Column(unique = true)
-    public String email;
-    public String password;
+    private String email;
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     public Set<Review> userReviews;
@@ -60,5 +74,30 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

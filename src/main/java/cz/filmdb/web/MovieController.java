@@ -7,10 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.InvalidParameterException;
 import java.util.List;
-import java.util.Optional;
 
-@RestController
-@RequestMapping("api/v1/movies/")
+@RestController("api/v1/movies/")
 @CrossOrigin("http://localhost:5173")
 public class MovieController {
 
@@ -21,22 +19,19 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @GetMapping("getMovies")
+    @GetMapping
     public List<Movie> getMovies() {
         return movieService.getMovies();
     }
 
-    @GetMapping("getLatestMovies")
+    @GetMapping("latest")
     public List<Movie> getLatestMovies() {
         return movieService.getLatestMovies();
     }
 
-    @GetMapping("getMovieById")
-    public Movie getMovieById(@RequestParam(name = "id") Optional<Long> id) {
-        if (id.isPresent())
-            return movieService.getMovieById(id.get());
-
-        throw new InvalidParameterException("Id is either null or invalid!");
+    @GetMapping("{id}")
+    public Movie getMovieById(@PathVariable String id) {
+        return movieService.loadMovieById(Long.parseLong(id)).orElse(null);
     }
 
     @GetMapping("getMoviesByGenres")
