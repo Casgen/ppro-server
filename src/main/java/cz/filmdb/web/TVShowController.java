@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
-@RestController("api/v1/tvShows/")
+@RestController
+@RequestMapping("api/v1/tvShows/")
 public class TVShowController {
 
     private TVShowService tvShowService;
