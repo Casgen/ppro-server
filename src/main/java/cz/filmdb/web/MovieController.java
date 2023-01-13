@@ -5,10 +5,10 @@ import cz.filmdb.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.InvalidParameterException;
 import java.util.List;
 
-@RestController("api/v1/movies/")
+@RestController
+@RequestMapping("api/v1/movies/")
 @CrossOrigin("http://localhost:5173")
 public class MovieController {
 
@@ -34,7 +34,7 @@ public class MovieController {
         return movieService.loadMovieById(Long.parseLong(id)).orElse(null);
     }
 
-    @GetMapping("getMoviesByGenres")
+    @GetMapping("genres")
     public List<Movie> getMoviesByGenres(@RequestParam(name = "genres") List<Long> genreIds) {
         if (genreIds.isEmpty()) return List.of();
 
