@@ -3,15 +3,33 @@ package cz.filmdb.conf;
 import cz.filmdb.enums.RoleType;
 import cz.filmdb.model.*;
 import cz.filmdb.repo.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import java.time.LocalDate;
 import java.util.*;
 
 @Configuration
 public class FlmDBConfig {
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public FlmDBConfig(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Bean
     CommandLineRunner commandLineRunner(MovieRepository movieRepository, GenreRepository genreRepository,
@@ -138,5 +156,38 @@ public class FlmDBConfig {
 
             reviewRepository.saveAll(reviews);
         };
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        /*PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
+        UserDetails userDetails = org.springframework.security.core.userdetails.User.withUsername("user")
+                .password(encoder.encode("password"))
+                .roles("USER")
+                .build();
+
+        return new InMemoryUserDetailsManager(userDetails);*/
+
+        return username -> userRepository.findUserByUsername(username);
+
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

@@ -1,13 +1,12 @@
 package cz.filmdb.service;
 
-import cz.filmdb.model.Genre;
 import cz.filmdb.model.Movie;
-import cz.filmdb.repo.GenreRepository;
 import cz.filmdb.repo.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MovieService {
@@ -23,12 +22,15 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-    public Movie getMovieById(Long id) {
-        return movieRepository.findById(id).get();
+    public Optional<Movie> loadMovieById(Long id) {
+        return movieRepository.findById(id);
     }
 
     public List<Movie> getMoviesByGenres(List<Long> genreIds) {
         return movieRepository.findMoviesByGenres(genreIds);
     }
 
+    public List<Movie> getLatestMovies() {
+        return movieRepository.findLatestMovies();
+    }
 }

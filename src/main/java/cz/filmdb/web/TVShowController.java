@@ -4,11 +4,14 @@ import cz.filmdb.model.TVShow;
 import cz.filmdb.service.TVShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping(path = "api/v1/tvshows/")
+import java.util.List;
+import java.util.Optional;
+
+@RestController("api/v1/tvShows/")
 public class TVShowController {
 
     private TVShowService tvShowService;
@@ -19,8 +22,17 @@ public class TVShowController {
     }
 
 
-    @GetMapping("/getShow")
-    public TVShow getShow() {
-        return new TVShow();
+    @GetMapping("{id}")
+    public TVShow getShow(@PathVariable String id) {
+
+        Optional<TVShow> tvShow = tvShowService.loadTVShowById(Long.parseLong(id));
+
+        return tvShow.orElse(null);
+
+    }
+
+    @GetMapping
+    public List<TVShow> getShows() {
+        return tvShowService.loadTVShows();
     }
 }

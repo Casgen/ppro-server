@@ -17,11 +17,13 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
-    public List<Review> getReviewsByUser(Long id) {
+    public List<Review> loadReviewsByUser(Long id) {
         return reviewRepository.findReviewsByUser(id);
     }
 
-    public List<Review> getReviewsByFilmwork(Long id) {
+    public List<Review> loadReviewsByFilmwork(Long id) {
         return reviewRepository.findReviewsByFilmwork(id);
     }
+
+    public List<Review> loadReviews() { return reviewRepository.findAll();}
 }

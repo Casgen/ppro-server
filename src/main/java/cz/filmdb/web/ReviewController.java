@@ -19,13 +19,18 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping("getReviewsByUser/{id}")
-    public List<Review> getReviewsByUser(@PathVariable("id") String id) {
-        return reviewService.getReviewsByUser(Long.parseLong(id));
+    @GetMapping
+    public List<Review> getReviews() {
+        return reviewService.loadReviews();
     }
 
-    @GetMapping("getReviewsByFilmwork/{id}")
+    @GetMapping("user/{id}")
+    public List<Review> getReviewsByUser(@PathVariable("id") String id) {
+        return reviewService.loadReviewsByUser(Long.parseLong(id));
+    }
+
+    @GetMapping("filmwork/{id}")
     public List<Review> getReviewsByFilmwork(@PathVariable("id") String id) {
-        return reviewService.getReviewsByFilmwork(Long.parseLong(id));
+        return reviewService.loadReviewsByFilmwork(Long.parseLong(id));
     }
 }

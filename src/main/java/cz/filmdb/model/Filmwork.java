@@ -1,13 +1,9 @@
 package cz.filmdb.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import cz.filmdb.enums.RoleType;
-import cz.filmdb.serial.OccupationsSerializer;
-import cz.filmdb.serial.ReviewsSerializer;
+import cz.filmdb.serial.FilmworkSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +15,7 @@ import java.util.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "filmwork")
+@JsonSerialize(using = FilmworkSerializer.class)
 public class Filmwork {
     @Id
     @SequenceGenerator(
@@ -54,11 +51,9 @@ public class Filmwork {
     protected Set<Genre> genres;
 
     @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL)
-    @JsonSerialize(using = OccupationsSerializer.class)
     protected Set<Occupation> occupations;
 
     @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL)
-    @JsonSerialize(using = ReviewsSerializer.class)
     protected Set<Review> reviews;
 
     public Filmwork(String name, Set<Genre> genres) {

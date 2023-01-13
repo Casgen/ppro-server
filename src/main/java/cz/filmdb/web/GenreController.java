@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("api/v1/genres/")
+@RestController("api/v1/genres/")
 public class GenreController {
 
     private GenreService genreService;
@@ -18,17 +17,17 @@ public class GenreController {
         this.genreService = genreService;
     }
 
-    @GetMapping("/getGenre/{id}")
+    @GetMapping("{id}")
     public Genre getGenre(@PathVariable String id) {
-        return genreService.findGenreById(Long.parseLong(id)).orElse(null);
+        return genreService.loadGengreById(Long.parseLong(id)).orElse(null);
     }
 
-    @GetMapping("/getGenres")
+    @GetMapping
     public List<Genre> getGenres() {
         return genreService.getAllGenres();
     }
 
-    @GetMapping("/search")
+    @GetMapping("search")
     public List<Genre> searchGenresByQuery(@RequestParam String query) {
         return genreService.searchGenres(query);
     }
