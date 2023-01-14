@@ -33,7 +33,6 @@ public class Genre {
     private String name;
 
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
-    @JsonSerialize(using = FilmworkSerializer.class)
     private Set<Filmwork> filmworks;
 
     public Genre(String name) {

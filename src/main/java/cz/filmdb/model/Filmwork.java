@@ -56,6 +56,21 @@ public class Filmwork {
     @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL)
     protected Set<Review> reviews;
 
+
+    // Users which will watch, wont watch, have watched or is watching some movies or tv shows.
+
+    @ManyToMany(mappedBy = "plansToWatch", fetch = FetchType.LAZY)
+    protected Set<User> usersPlanToWatch;
+
+    @ManyToMany(mappedBy = "haveWatched", fetch = FetchType.LAZY)
+    protected Set<User> usersWatched;
+
+    @ManyToMany(mappedBy = "isWatching", fetch = FetchType.LAZY)
+    protected Set<User> usersWatching;
+
+    @ManyToMany(mappedBy = "wontWatch", fetch = FetchType.LAZY)
+    protected Set<User> usersWontWatch;
+
     public Filmwork(String name, Set<Genre> genres) {
         this.name = name;
         this.genres = genres;
