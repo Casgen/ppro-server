@@ -48,6 +48,11 @@ public class Genre {
 
     }
 
+    public Genre(Genre newGenre) {
+        id = newGenre.id;
+        name = newGenre.name;
+    }
+
     @Override
     public String toString() {
         return "Genre{" +

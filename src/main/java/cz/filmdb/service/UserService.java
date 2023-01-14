@@ -33,4 +33,17 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findUserByUsername(username);
     }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public User updateUser(User updatedUser) {
+        Optional<User> oldUser = userRepository.findById(updatedUser.getId());
+
+        if (oldUser.isEmpty())
+            return null;
+
+        return userRepository.save(updatedUser);
+    }
 }

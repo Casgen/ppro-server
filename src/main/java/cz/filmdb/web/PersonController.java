@@ -1,8 +1,10 @@
 package cz.filmdb.web;
 
+import cz.filmdb.model.Genre;
 import cz.filmdb.model.Person;
 import cz.filmdb.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,5 +29,25 @@ public class PersonController {
     @GetMapping("{id}")
     public Person getPerson(@PathVariable String id) {
         return personService.loadPerson(Long.parseLong(id));
+    }
+
+    @PostMapping
+    public ResponseEntity.BodyBuilder createPerson(@RequestBody Person person) {
+        Person newPerson = personService.savePerson(person);
+
+        if (newPerson != null)
+            return ResponseEntity.ok();
+
+        return ResponseEntity.status(503);
+    }
+
+    @PutMapping
+    public ResponseEntity.BodyBuilder putPerson(@RequestBody Person person) {
+        Person updatedPerson = personService.updatePerson(person);
+
+        if (updatedPerson != null)
+            return ResponseEntity.ok();
+
+        return ResponseEntity.status(503);
     }
 }

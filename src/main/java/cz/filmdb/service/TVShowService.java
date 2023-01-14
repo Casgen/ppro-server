@@ -1,6 +1,8 @@
 package cz.filmdb.service;
 
+import cz.filmdb.model.Genre;
 import cz.filmdb.model.TVShow;
+import cz.filmdb.model.User;
 import cz.filmdb.repo.TVShowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,7 @@ import java.util.Optional;
 @Service
 public class TVShowService {
 
-    private TVShowRepository tvShowRepository;
+    private final TVShowRepository tvShowRepository;
 
     @Autowired
     public TVShowService(TVShowRepository tvShowRepository) {
@@ -25,5 +27,19 @@ public class TVShowService {
 
     public Optional<TVShow> loadTVShowById(Long id) {
         return tvShowRepository.findById(id);
+    }
+
+    public TVShow saveTvShow(TVShow tvShow) {
+        return tvShowRepository.save(tvShow);
+    }
+
+    public TVShow updateTvShow(TVShow updatedTvShow) {
+
+        Optional<TVShow> oldTvShow = tvShowRepository.findById(updatedTvShow.getFid());
+
+        if (oldTvShow.isEmpty())
+            return null;
+
+        return tvShowRepository.save(updatedTvShow);
     }
 }

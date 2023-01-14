@@ -41,4 +41,11 @@ public class TVShow extends Filmwork {
         this.runningFrom = new Date(0);
         this.runningTo = null;
     }
+
+    public TVShow(TVShow newTvShow) {
+        super(newTvShow.fid, newTvShow.name,newTvShow.genres);
+        numberOfSeasons = newTvShow.numberOfSeasons;
+        runningFrom = newTvShow.runningFrom;
+        runningTo = newTvShow.runningTo;
+    }
 }

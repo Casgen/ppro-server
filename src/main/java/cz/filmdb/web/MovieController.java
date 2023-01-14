@@ -1,8 +1,11 @@
 package cz.filmdb.web;
 
 import cz.filmdb.model.Movie;
+import cz.filmdb.model.Person;
+import cz.filmdb.model.Review;
 import cz.filmdb.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,5 +42,25 @@ public class MovieController {
         if (genreIds.isEmpty()) return List.of();
 
         return movieService.getMoviesByGenres(genreIds);
+    }
+
+    @PostMapping
+    public ResponseEntity.BodyBuilder createMovie(@RequestBody Movie movie) {
+        Movie newMovie = movieService.saveMovie(movie);
+
+        if (newMovie != null)
+            return ResponseEntity.ok();
+
+        return ResponseEntity.status(503);
+    }
+
+    @PutMapping
+    public ResponseEntity.BodyBuilder putMovie(@RequestBody Movie movie) {
+        Movie updatedMovie = movieService.updateMovie(movie);
+
+        if (updatedMovie != null)
+            return ResponseEntity.ok();
+
+        return ResponseEntity.status(503);
     }
 }

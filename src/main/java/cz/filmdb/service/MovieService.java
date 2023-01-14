@@ -33,4 +33,17 @@ public class MovieService {
     public List<Movie> getLatestMovies() {
         return movieRepository.findLatestMovies();
     }
+
+    public Movie saveMovie(Movie movie) {
+        return movieRepository.save(movie);
+    }
+
+    public Movie updateMovie(Movie updatedMovie) {
+        Optional<Movie> oldReview = movieRepository.findById(updatedMovie.getFid());
+
+        if (oldReview.isEmpty())
+            return null;
+
+        return movieRepository.save(updatedMovie);
+    }
 }

@@ -44,4 +44,17 @@ public class PersonService {
 
         return person.get();
     }
+
+    public Person savePerson(Person person) {
+        return personRepository.save(person);
+    }
+
+    public Person updatePerson(Person updatedPerson) {
+        Optional<Person> oldPerson = personRepository.findById(updatedPerson.getId());
+
+        if (oldPerson.isEmpty())
+            return null;
+
+        return personRepository.save(updatedPerson);
+    }
 }

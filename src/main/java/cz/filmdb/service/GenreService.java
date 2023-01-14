@@ -29,4 +29,18 @@ public class GenreService {
     public List<Genre> searchGenres(String query) {
         return genreRepository.findByNameContainingIgnoreCase(query);
     }
+
+    public Genre saveGenre(Genre genre) {
+        return genreRepository.save(genre);
+    }
+
+    public Genre updateGenre(Genre updatedGenre) {
+
+        Optional<Genre> oldGenre = genreRepository.findById(updatedGenre.getId());
+
+        if (oldGenre.isEmpty())
+            return null;
+
+        return genreRepository.save(updatedGenre);
+    }
 }

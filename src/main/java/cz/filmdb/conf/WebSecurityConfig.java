@@ -8,6 +8,7 @@ import org.burningwave.core.classes.ClassHunter;
 import org.burningwave.core.classes.SearchConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,17 +38,85 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf()
-                .disable()
+            .disable()
                 .authorizeHttpRequests()
-                 //These URLs won't require authentication
-                .requestMatchers("/api/v1/auth/**")
+                //These URLs won't require authentication
+                .requestMatchers(HttpMethod.GET,
+                        "/api/v1/users/**",
+                        "/api/v1/users",
+                        "/api/v1/movies/**",
+                        "/api/v1/movies",
+                        "/api/v1/tvshows/**",
+                        "/api/v1/tvshows",
+                        "/api/v1/reviews/**",
+                        "/api/v1/reviews",
+                        "/api/v1/people/**",
+                        "/api/v1/people",
+                        "/api/v1/genres/**",
+                        "/api/v1/genres"
+                        )
                 .permitAll()
+            .and()
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.POST,"/api/v1/auth/**")
+                .permitAll()
+            .and()
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.POST,
+                        "/api/v1/users/**",
+                        "/api/v1/users",
+                        "/api/v1/movies/**",
+                        "/api/v1/movies",
+                        "/api/v1/tvshows/**",
+                        "/api/v1/tvshows",
+                        "/api/v1/reviews/**",
+                        "/api/v1/reviews",
+                        "/api/v1/people/**",
+                        "/api/v1/people",
+                        "/api/v1/genres/**",
+                        "/api/v1/genres"
+                )
+                .hasRole("ADMIN")
+            .and()
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.PUT,
+                        "/api/v1/users/**",
+                        "/api/v1/users",
+                        "/api/v1/movies/**",
+                        "/api/v1/movies",
+                        "/api/v1/tvshows/**",
+                        "/api/v1/tvshows",
+                        "/api/v1/reviews/**",
+                        "/api/v1/reviews",
+                        "/api/v1/people/**",
+                        "/api/v1/people",
+                        "/api/v1/genres/**",
+                        "/api/v1/genres"
+                )
+                .hasRole("ADMIN")
+            .and()
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.DELETE,
+                        "/api/v1/users/**",
+                        "/api/v1/users",
+                        "/api/v1/movies/**",
+                        "/api/v1/movies",
+                        "/api/v1/tvshows/**",
+                        "/api/v1/tvshows",
+                        "/api/v1/reviews/**",
+                        "/api/v1/reviews",
+                        "/api/v1/people/**",
+                        "/api/v1/people",
+                        "/api/v1/genres/**",
+                        "/api/v1/genres"
+                )
+                .hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
-                .and()
+            .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+            .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         http.cors();

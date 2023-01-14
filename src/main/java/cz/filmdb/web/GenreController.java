@@ -1,8 +1,10 @@
 package cz.filmdb.web;
 
 import cz.filmdb.model.Genre;
+import cz.filmdb.model.TVShow;
 import cz.filmdb.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,5 +34,26 @@ public class GenreController {
     @GetMapping("search")
     public List<Genre> searchGenresByQuery(@RequestParam String query) {
         return genreService.searchGenres(query);
+    }
+
+
+    @PostMapping
+    public ResponseEntity.BodyBuilder createGenre(@RequestBody Genre genre) {
+        Genre newGenre = genreService.saveGenre(genre);
+
+        if (newGenre != null)
+            return ResponseEntity.ok();
+
+        return ResponseEntity.status(503);
+    }
+
+    @PutMapping
+    public ResponseEntity.BodyBuilder putGenre(@RequestBody Genre genre) {
+        Genre updatedGenre = genreService.updateGenre(genre);
+
+        if (updatedGenre != null)
+            return ResponseEntity.ok();
+
+        return ResponseEntity.status(503);
     }
 }
