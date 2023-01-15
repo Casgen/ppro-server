@@ -1,7 +1,6 @@
-package cz.filmdb.web;
+package cz.filmdb.controller;
 
 import cz.filmdb.model.Genre;
-import cz.filmdb.model.TVShow;
 import cz.filmdb.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -3,10 +3,14 @@ package cz.filmdb.repo;
 import cz.filmdb.model.Genre;
 import cz.filmdb.model.Movie;
 import cz.filmdb.model.Person;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 public interface MovieRepository extends JpaRepository<Movie,Long> {
@@ -22,4 +26,6 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
 
     @Query("SELECT m FROM Movie m ORDER BY m.releaseDate DESC")
     List<Movie> findLatestMovies();
+
+    List<Movie> findAll(Sort sort);
 }

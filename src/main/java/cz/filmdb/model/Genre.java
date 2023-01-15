@@ -1,7 +1,7 @@
 package cz.filmdb.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import cz.filmdb.serial.FilmworkSerializer;
 import cz.filmdb.serial.GenreSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;

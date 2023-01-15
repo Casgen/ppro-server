@@ -27,6 +27,15 @@ public class Review {
     )
     private Long id;
 
+    public Review(Long id, User user, Filmwork filmwork, LocalDateTime date, String comment, float score) {
+        this.id = id;
+        this.user = user;
+        this.filmwork = filmwork;
+        this.date = date;
+        this.comment = comment;
+        this.score = score;
+    }
+
     public Review(User user, Filmwork filmwork, String comment, float score) {
         this.user = user;
         this.filmwork = filmwork;

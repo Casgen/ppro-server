@@ -43,8 +43,24 @@ public class Occupation {
         this.role = role;
     }
 
+    public Occupation(Long id, Person person, RoleType role) {
+        this.filmwork = null;
+        this.role = role;
+        this.person = person;
+    }
+
     public Occupation() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "Occupation{" +
+                "id=" + id +
+                ", filmwork=" + filmwork +
+                ", person=" + person +
+                ", role=" + role +
+                '}';
     }
 
     public static Set<Occupation> of(Filmwork filmwork, Map<Person, List<RoleType>> map) {

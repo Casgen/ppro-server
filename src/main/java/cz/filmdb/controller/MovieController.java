@@ -1,8 +1,6 @@
-package cz.filmdb.web;
+package cz.filmdb.controller;
 
 import cz.filmdb.model.Movie;
-import cz.filmdb.model.Person;
-import cz.filmdb.model.Review;
 import cz.filmdb.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +13,7 @@ import java.util.List;
 @CrossOrigin("http://localhost:5173")
 public class MovieController {
 
-    private MovieService movieService;
+    private final MovieService movieService;
 
     @Autowired
     public MovieController(MovieService movieService) {
@@ -24,12 +22,12 @@ public class MovieController {
 
     @GetMapping
     public List<Movie> getMovies() {
-        return movieService.getMovies();
+        return movieService.loadMovies();
     }
 
     @GetMapping("latest")
     public List<Movie> getLatestMovies() {
-        return movieService.getLatestMovies();
+        return movieService.loadLatestMovies();
     }
 
     @GetMapping("{id}")
@@ -41,7 +39,7 @@ public class MovieController {
     public List<Movie> getMoviesByGenres(@RequestParam(name = "genres") List<Long> genreIds) {
         if (genreIds.isEmpty()) return List.of();
 
-        return movieService.getMoviesByGenres(genreIds);
+        return movieService.loadMoviesByGenres(genreIds);
     }
 
     @PostMapping

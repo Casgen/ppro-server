@@ -1,5 +1,6 @@
 package cz.filmdb.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import cz.filmdb.serial.PersonSerializer;
 import jakarta.persistence.*;

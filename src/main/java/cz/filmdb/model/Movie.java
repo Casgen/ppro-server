@@ -1,6 +1,9 @@
 package cz.filmdb.model;
 
-import cz.filmdb.enums.RoleType;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import cz.filmdb.deserial.MovieDeserializer;
+import cz.filmdb.serial.MovieSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +14,8 @@ import java.util.*;
 @Getter
 @Setter
 @Entity
+@JsonSerialize(using = MovieSerializer.class)
+@JsonDeserialize(using = MovieDeserializer.class)
 public class Movie extends Filmwork {
 
     @Column(nullable = false, name = "release_date")
@@ -28,6 +33,16 @@ public class Movie extends Filmwork {
 
     public Movie() {}
 
+    public Movie(String name, Set<Genre> genres, Set<Occupation> occupations, LocalDate releaseDate) {
+        super(name, genres, occupations);
+        this.releaseDate = releaseDate;
+    }
+
+    public Movie(Long fid, String name, float audienceScore, float criticsScore, Set<Genre> genres,
+                 Set<Occupation> occupations, Set<Review> reviews, LocalDate releaseDate) {
+        super(fid, name, audienceScore, criticsScore, genres, occupations, reviews);
+        this.releaseDate = releaseDate;
+    }
 
     @Override
     public String toString() {

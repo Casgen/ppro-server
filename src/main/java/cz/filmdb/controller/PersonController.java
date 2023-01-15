@@ -1,6 +1,5 @@
-package cz.filmdb.web;
+package cz.filmdb.controller;
 
-import cz.filmdb.model.Genre;
 import cz.filmdb.model.Person;
 import cz.filmdb.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;

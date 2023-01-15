@@ -18,7 +18,7 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<Movie> getMovies() {
+    public List<Movie> loadMovies() {
         return movieRepository.findAll();
     }
 
@@ -26,11 +26,11 @@ public class MovieService {
         return movieRepository.findById(id);
     }
 
-    public List<Movie> getMoviesByGenres(List<Long> genreIds) {
+    public List<Movie> loadMoviesByGenres(List<Long> genreIds) {
         return movieRepository.findMoviesByGenres(genreIds);
     }
 
-    public List<Movie> getLatestMovies() {
+    public List<Movie> loadLatestMovies() {
         return movieRepository.findLatestMovies();
     }
 

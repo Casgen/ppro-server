@@ -1,4 +1,4 @@
-package cz.filmdb.web;
+package cz.filmdb.controller;
 
 import cz.filmdb.model.AuthenticationRequest;
 import cz.filmdb.model.AuthenticationResponse;
