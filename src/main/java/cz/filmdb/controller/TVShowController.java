@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/tvshows/")
+@RequestMapping("api/v1/tvshows")
 @CrossOrigin("http://localhost:5173")
 public class TVShowController {
 
-    private TVShowService tvShowService;
+    private final TVShowService tvShowService;
 
     @Autowired
     public TVShowController(TVShowService tvShowService) {
@@ -22,7 +22,7 @@ public class TVShowController {
     }
 
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public TVShow getShow(@PathVariable String id) {
 
         Optional<TVShow> tvShow = tvShowService.loadTVShowById(Long.parseLong(id));

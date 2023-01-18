@@ -3,8 +3,12 @@ package cz.filmdb.conf;
 import cz.filmdb.enums.RoleType;
 import cz.filmdb.model.*;
 import cz.filmdb.repo.*;
+import cz.filmdb.service.StorageService;
+import cz.filmdb.service.StorageServiceImpl;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -25,6 +29,7 @@ import java.util.*;
 @Configuration
 @EnableSpringDataWebSupport
 public class FlmDBConfig {
+
 
     private final UserRepository userRepository;
 
@@ -181,6 +186,14 @@ public class FlmDBConfig {
 
         return username -> userRepository.findUserByUsername(username);
 
+    }
+
+    @Bean
+    public StorageService storageService() {
+        StorageService storageService = new StorageServiceImpl();
+        storageService.init();
+
+        return storageService;
     }
 
     @Bean

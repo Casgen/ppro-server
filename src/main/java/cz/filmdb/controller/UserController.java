@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/users/")
+@RequestMapping("api/v1/users")
 @CrossOrigin("http://localhost:5173")
 public class UserController {
 
@@ -25,7 +25,7 @@ public class UserController {
         return userService.loadUsers();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public User getUser(@PathVariable String id) {
         return userService.loadUserById(Long.parseLong(id)).orElse(null);
     }

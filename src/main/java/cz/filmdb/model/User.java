@@ -106,8 +106,6 @@ public class User implements UserDetails {
     public Set<Review> userReviews;
 
 
-
-
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;

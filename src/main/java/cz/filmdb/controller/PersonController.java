@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/people/")
+@RequestMapping("api/v1/people")
 @CrossOrigin("http://localhost:5173")
 public class PersonController {
 
-    private PersonService personService;
+    private final PersonService personService;
 
-    @Autowired
     public PersonController(PersonService personService) {
         this.personService = personService;
     }
@@ -25,7 +24,7 @@ public class PersonController {
         return personService.loadPeople();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Person getPerson(@PathVariable String id) {
         return personService.loadPerson(Long.parseLong(id));
     }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/genres/")
+@RequestMapping("api/v1/genres")
 @CrossOrigin("http://localhost:5173")
 public class GenreController {
 
@@ -20,7 +20,7 @@ public class GenreController {
         this.genreService = genreService;
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Genre getGenre(@PathVariable String id) {
         return genreService.loadGengreById(Long.parseLong(id)).orElse(null);
     }
@@ -30,7 +30,7 @@ public class GenreController {
         return genreService.getAllGenres();
     }
 
-    @GetMapping("search")
+    @GetMapping("/search")
     public List<Genre> searchGenresByQuery(@RequestParam String query) {
         return genreService.searchGenres(query);
     }
@@ -44,6 +44,7 @@ public class GenreController {
             return ResponseEntity.ok();
 
         return ResponseEntity.status(503);
+
     }
 
     @PutMapping

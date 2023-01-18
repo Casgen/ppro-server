@@ -12,12 +12,13 @@ import java.util.Optional;
 @Service
 public class PersonService {
 
-    private PersonRepository personRepository;
-    private MovieRepository movieRepository;
+    private final PersonRepository personRepository;
+    private final MovieRepository movieRepository;
 
     @Autowired
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(PersonRepository personRepository, MovieRepository movieRepository) {
         this.personRepository = personRepository;
+        this.movieRepository = movieRepository;
     }
 
 

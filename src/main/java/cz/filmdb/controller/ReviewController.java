@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/reviews/")
+@RequestMapping("api/v1/reviews")
 @CrossOrigin("http://localhost:5173")
 public class ReviewController {
 
@@ -25,12 +25,12 @@ public class ReviewController {
         return reviewService.loadReviews();
     }
 
-    @GetMapping("user/{id}")
+    @GetMapping("/user/{id}")
     public List<Review> getReviewsByUser(@PathVariable("id") String id) {
         return reviewService.loadReviewsByUser(Long.parseLong(id));
     }
 
-    @GetMapping("filmwork/{id}")
+    @GetMapping("/filmwork/{id}")
     public List<Review> getReviewsByFilmwork(@PathVariable("id") String id) {
         return reviewService.loadReviewsByFilmwork(Long.parseLong(id));
     }

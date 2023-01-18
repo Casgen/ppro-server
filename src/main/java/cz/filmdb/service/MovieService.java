@@ -3,6 +3,8 @@ package cz.filmdb.service;
 import cz.filmdb.model.Movie;
 import cz.filmdb.repo.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +20,8 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<Movie> loadMovies() {
-        return movieRepository.findAll();
+    public Page<Movie> loadMovies(Pageable pageable) {
+        return movieRepository.findAll(pageable);
     }
 
     public Optional<Movie> loadMovieById(Long id) {
@@ -28,10 +30,6 @@ public class MovieService {
 
     public List<Movie> loadMoviesByGenres(List<Long> genreIds) {
         return movieRepository.findMoviesByGenres(genreIds);
-    }
-
-    public List<Movie> loadLatestMovies() {
-        return movieRepository.findLatestMovies();
     }
 
     public Movie saveMovie(Movie movie) {

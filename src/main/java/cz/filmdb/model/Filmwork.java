@@ -67,6 +67,8 @@ public class Filmwork {
     @ManyToMany(mappedBy = "wontWatch", fetch = FetchType.LAZY)
     protected Set<User> usersWontWatch;
 
+    protected String imgPaths;
+
     public Filmwork(String name, Set<Genre> genres) {
         this.name = name;
         this.genres = genres;

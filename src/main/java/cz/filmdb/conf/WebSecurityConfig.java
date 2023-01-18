@@ -1,11 +1,6 @@
 package cz.filmdb.conf;
 
-import cz.filmdb.web.*;
 import lombok.RequiredArgsConstructor;
-import org.burningwave.core.assembler.ComponentContainer;
-import org.burningwave.core.assembler.ComponentSupplier;
-import org.burningwave.core.classes.ClassHunter;
-import org.burningwave.core.classes.SearchConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,10 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.lang.annotation.Annotation;
-import java.util.Collection;
 
 @Configuration
 // This annotation ensures that Spring Security is initialized
@@ -33,7 +24,6 @@ public class WebSecurityConfig {
             "api/v1/auth/**"
     };
 
-    //TODO: Alter this after getting into production!
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -53,12 +43,16 @@ public class WebSecurityConfig {
                         "/api/v1/people/**",
                         "/api/v1/people",
                         "/api/v1/genres/**",
-                        "/api/v1/genres"
+                        "/api/v1/genres",
+                        "/api/v1/files/**"
                         )
                 .permitAll()
             .and()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST,"/api/v1/auth/**")
+                .requestMatchers(HttpMethod.POST,
+                        "/api/v1/auth/**",
+                        "/api/v1/files/**" // TODO: Change the permissions later on. this is just for testing purposes
+                )
                 .permitAll()
             .and()
                 .authorizeHttpRequests()
