@@ -1,5 +1,6 @@
 package cz.filmdb.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import cz.filmdb.serial.UserSerializer;
 import jakarta.persistence.*;
@@ -42,19 +43,78 @@ public class User implements UserDetails {
 
     @Column(unique = true)
     private String email;
+
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
 
+    // Users which will watch, wont watch, have watched or is watching some movies or tv shows.
+
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "plans_to_watch",
+            joinColumns = {
+                    @JoinColumn(name = "user_id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "filmwork_id")
+            }
+    )
+    @JsonManagedReference("users-plans-to-watch-ref")
+    private Set<Filmwork> plansToWatch;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "is_watching",
+            joinColumns = {
+                    @JoinColumn(name = "user_id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "filmwork_id")
+            }
+    )
+    @JsonManagedReference("users-watching-ref")
+    private Set<Filmwork> isWatching;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "wont_watch",
+            joinColumns = {
+                    @JoinColumn(name = "user_id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "filmwork_id")
+            }
+    )
+    @JsonManagedReference("users-wont-watch-ref")
+    private Set<Filmwork> wontWatch;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "have_watched",
+            joinColumns = {
+                    @JoinColumn(name = "user_id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "filmwork_id")
+            }
+    )
+    @JsonManagedReference("users-watched-ref")
+    private Set<Filmwork> haveWatched;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonManagedReference("users-reviews-ref")
     public Set<Review> userReviews;
+
 
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public User(Long id, String username) {
+        this.username = username;
+        this.id = id;
     }
 
     public User(Long id, String username, String email, String password) {

@@ -1,7 +1,7 @@
 package cz.filmdb.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import cz.filmdb.serial.FilmworkSerializer;
 import cz.filmdb.serial.GenreSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,7 +33,6 @@ public class Genre {
     private String name;
 
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
-    @JsonSerialize(using = FilmworkSerializer.class)
     private Set<Filmwork> filmworks;
 
     public Genre(String name) {
@@ -47,6 +46,11 @@ public class Genre {
 
     public Genre() {
 
+    }
+
+    public Genre(Genre newGenre) {
+        id = newGenre.id;
+        name = newGenre.name;
     }
 
     @Override

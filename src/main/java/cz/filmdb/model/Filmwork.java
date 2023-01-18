@@ -1,9 +1,7 @@
 package cz.filmdb.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import cz.filmdb.enums.RoleType;
-import cz.filmdb.serial.FilmworkSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +13,6 @@ import java.util.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "filmwork")
-@JsonSerialize(using = FilmworkSerializer.class)
 public class Filmwork {
     @Id
     @SequenceGenerator(
@@ -47,7 +44,6 @@ public class Filmwork {
                     @JoinColumn(name = "genre_id")
             }
     )
-    @JsonManagedReference
     protected Set<Genre> genres;
 
     @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL)
@@ -56,11 +52,39 @@ public class Filmwork {
     @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL)
     protected Set<Review> reviews;
 
+
+    // Users which will watch, wont watch, have watched or is watching some movies or tv shows.
+
+    @ManyToMany(mappedBy = "plansToWatch", fetch = FetchType.LAZY)
+    protected Set<User> usersPlanToWatch;
+
+    @ManyToMany(mappedBy = "haveWatched", fetch = FetchType.LAZY)
+    protected Set<User> usersWatched;
+
+    @ManyToMany(mappedBy = "isWatching", fetch = FetchType.LAZY)
+    protected Set<User> usersWatching;
+
+    @ManyToMany(mappedBy = "wontWatch", fetch = FetchType.LAZY)
+    protected Set<User> usersWontWatch;
+
+    protected String imgPaths;
+
     public Filmwork(String name, Set<Genre> genres) {
         this.name = name;
         this.genres = genres;
         this.occupations = Set.of();
         this.criticsScore = 0.f;
+    }
+
+    public Filmwork(Long fid, String name, float audienceScore, float criticsScore, Set<Genre> genres,
+                    Set<Occupation> occupations, Set<Review> reviews) {
+        this.fid = fid;
+        this.name = name;
+        this.audienceScore = audienceScore;
+        this.criticsScore = criticsScore;
+        this.genres = genres;
+        this.occupations = occupations;
+        this.reviews = reviews;
     }
 
     public Filmwork(String name, Set<Genre> genres, Set<Occupation> occupations) {
@@ -92,15 +116,15 @@ public class Filmwork {
         List<Review> reviewList = new ArrayList<>(reviews);
         reviewList.sort(new SortByAudienceScore());
 
-        float middleIndex = reviewList.size()/2.f;
+        float middleIndex = reviewList.size() / 2.f;
 
         if ((reviewList.size() % 2) != 0) return reviewList.get((int) middleIndex).getScore();
 
-        return (reviewList.get((int) middleIndex).getScore() + reviewList.get((int) middleIndex-1).getScore()) / 2.f;
+        return (reviewList.get((int) middleIndex).getScore() + reviewList.get((int) middleIndex - 1).getScore()) / 2.f;
 
     }
 
-    public void setOccupations(Map<Person,List<RoleType>> map) {
+    public void setOccupations(Map<Person, List<RoleType>> map) {
         this.occupations = Occupation.of(this, map);
     }
 
@@ -119,7 +143,7 @@ public class Filmwork {
 class SortByAudienceScore implements Comparator<Review> {
     @Override
     public int compare(Review o1, Review o2) {
-        return Float.compare(o1.getScore(),o2.getScore());
+        return Float.compare(o1.getScore(), o2.getScore());
     }
 }
 
