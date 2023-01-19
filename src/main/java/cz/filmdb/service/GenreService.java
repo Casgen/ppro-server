@@ -3,9 +3,10 @@ package cz.filmdb.service;
 import cz.filmdb.model.Genre;
 import cz.filmdb.repo.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,12 +23,12 @@ public class GenreService {
         return genreRepository.findById(id);
     }
 
-    public List<Genre> getAllGenres() {
-        return genreRepository.findAll();
+    public Page<Genre> getAllGenres(Pageable pageable) {
+        return genreRepository.findAll(pageable);
     }
 
-    public List<Genre> searchGenres(String query) {
-        return genreRepository.findByNameContainingIgnoreCase(query);
+    public Page<Genre> searchGenres(String query, Pageable pageable) {
+        return genreRepository.findAllByNameContainingIgnoreCase(query, pageable);
     }
 
     public Genre saveGenre(Genre genre) {

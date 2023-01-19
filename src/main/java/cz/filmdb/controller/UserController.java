@@ -3,6 +3,8 @@ package cz.filmdb.controller;
 import cz.filmdb.model.User;
 import cz.filmdb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,16 +15,15 @@ import java.util.List;
 @CrossOrigin("http://localhost:5173")
 public class UserController {
 
-    private UserService userService;
-
+    private final UserService userService;
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
-    public List<User> getUsers() {
-        return userService.loadUsers();
+    public Page<User> getUsers(Pageable pageable) {
+        return userService.loadUsers(pageable);
     }
 
     @GetMapping("/{id}")

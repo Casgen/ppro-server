@@ -1,10 +1,10 @@
 package cz.filmdb.service;
 
-import cz.filmdb.model.Genre;
 import cz.filmdb.model.TVShow;
-import cz.filmdb.model.User;
 import cz.filmdb.repo.TVShowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +21,12 @@ public class TVShowService {
     }
 
 
-    public List<TVShow> loadTVShows() {
-        return tvShowRepository.findAll();
+    public Page<TVShow> loadTVShows(Pageable pageable) {
+        return tvShowRepository.findAll(pageable);
+    }
+
+    public Page<TVShow> loadTvShowsByGenre(List<Long> ids, Pageable pageable) {
+        return tvShowRepository.findAllByGenres(ids, pageable);
     }
 
     public Optional<TVShow> loadTVShowById(Long id) {

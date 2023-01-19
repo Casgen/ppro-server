@@ -4,6 +4,8 @@ import cz.filmdb.model.Person;
 import cz.filmdb.repo.MovieRepository;
 import cz.filmdb.repo.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +24,8 @@ public class PersonService {
     }
 
 
-    public List<Person> loadPeople() {
-        return personRepository.findAll();
+    public Page<Person> loadPeople(Pageable pageable) {
+        return personRepository.findAll(pageable);
     }
 
     public List<Person> findPeopleByName(String query) {

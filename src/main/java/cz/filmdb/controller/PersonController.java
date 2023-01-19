@@ -3,6 +3,8 @@ package cz.filmdb.controller;
 import cz.filmdb.model.Person;
 import cz.filmdb.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +22,8 @@ public class PersonController {
     }
 
     @GetMapping
-    public List<Person> getPeople() {
-        return personService.loadPeople();
+    public Page<Person> getPeople(Pageable pageable) {
+        return personService.loadPeople(pageable);
     }
 
     @GetMapping("/{id}")

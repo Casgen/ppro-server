@@ -59,11 +59,9 @@ public class FilesController {
     public ResponseEntity<Resource> getFile(@PathVariable String filename, @RequestParam(value = "path", required = false) String pathParam) {
 
         Resource file;
-
         try {
 
             if (pathParam == null) {
-
                 file = storageService.loadAsResource(filename);
                 return sendOkResponse(file);
             }
@@ -76,7 +74,6 @@ public class FilesController {
             return sendOkResponse(file);
 
         } catch (Exception e) {
-
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
         }
     }

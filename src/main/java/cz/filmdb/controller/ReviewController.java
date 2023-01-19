@@ -3,6 +3,8 @@ package cz.filmdb.controller;
 import cz.filmdb.model.Review;
 import cz.filmdb.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,18 +23,18 @@ public class ReviewController {
     }
 
     @GetMapping
-    public List<Review> getReviews() {
-        return reviewService.loadReviews();
+    public Page<Review> getReviews(Pageable pageable) {
+        return reviewService.loadReviews(pageable);
     }
 
-    @GetMapping("/user/{id}")
-    public List<Review> getReviewsByUser(@PathVariable("id") String id) {
-        return reviewService.loadReviewsByUser(Long.parseLong(id));
+    @GetMapping("/by-user/{id}")
+    public Page<Review> getReviewsByUser(@PathVariable("id") String id, Pageable pageable) {
+        return reviewService.loadReviewsByUser(Long.parseLong(id), pageable);
     }
 
-    @GetMapping("/filmwork/{id}")
-    public List<Review> getReviewsByFilmwork(@PathVariable("id") String id) {
-        return reviewService.loadReviewsByFilmwork(Long.parseLong(id));
+    @GetMapping("/by-filmwork/{id}")
+    public Page<Review> getReviewsByFilmwork(@PathVariable("id") String id, Pageable pageable) {
+        return reviewService.loadReviewsByFilmwork(Long.parseLong(id), pageable);
     }
 
     @PostMapping

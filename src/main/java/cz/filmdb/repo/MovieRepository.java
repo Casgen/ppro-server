@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface MovieRepository extends JpaRepository<Movie,Long> {
 
-    List<Movie> findMoviesByName(String name, Pageable pageable);
+    Page<Movie> findAllByName(String name, Pageable pageable);
 
     Page<Movie> findAllByAudienceScoreGreaterThan(float score, Pageable pageable);
 
@@ -20,6 +20,6 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     Page<Movie> findAllByAudienceScoreLessThanEqual(float score, Pageable pageable);
 
     @Query("SELECT DISTINCT m FROM Movie m JOIN m.genres genre JOIN genre.filmworks filmwork WHERE genre.id IN (:genreIds)")
-    List<Movie> findMoviesByGenres(@Param("genreIds") List<Long> id);
+    Page<Movie> findAllByGenres(@Param("genreIds") List<Long> id, Pageable pageable);
 
 }

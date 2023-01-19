@@ -1,5 +1,6 @@
 package cz.filmdb.conf;
 
+import cz.filmdb.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +45,8 @@ public class WebSecurityConfig {
                         "/api/v1/people",
                         "/api/v1/genres/**",
                         "/api/v1/genres",
-                        "/api/v1/files/**"
+                        "/api/v1/files/**",
+                        "/api/v1/occupations/**"
                         )
                 .permitAll()
             .and()

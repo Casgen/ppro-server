@@ -3,6 +3,8 @@ package cz.filmdb.controller;
 import cz.filmdb.model.Genre;
 import cz.filmdb.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +15,17 @@ import java.util.List;
 @CrossOrigin("http://localhost:5173")
 public class GenreController {
 
-    private GenreService genreService;
+    private final GenreService genreService;
 
     @Autowired
     public GenreController(GenreService genreService) {
         this.genreService = genreService;
+    }
+
+
+    @GetMapping
+    public Page<Genre> getGenres(Pageable pageable) {
+        return genreService.getAllGenres(pageable);
     }
 
     @GetMapping("/{id}")
@@ -25,14 +33,9 @@ public class GenreController {
         return genreService.loadGengreById(Long.parseLong(id)).orElse(null);
     }
 
-    @GetMapping
-    public List<Genre> getGenres() {
-        return genreService.getAllGenres();
-    }
-
     @GetMapping("/search")
-    public List<Genre> searchGenresByQuery(@RequestParam String query) {
-        return genreService.searchGenres(query);
+    public Page<Genre> searchGenresByQuery(@RequestParam String query, Pageable pageable) {
+        return genreService.searchGenres(query, pageable);
     }
 
 

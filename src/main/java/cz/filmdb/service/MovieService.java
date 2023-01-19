@@ -28,8 +28,8 @@ public class MovieService {
         return movieRepository.findById(id);
     }
 
-    public List<Movie> loadMoviesByGenres(List<Long> genreIds) {
-        return movieRepository.findMoviesByGenres(genreIds);
+    public Page<Movie> loadMoviesByGenres(List<Long> genreIds, Pageable pageable) {
+        return movieRepository.findAllByGenres(genreIds, pageable);
     }
 
     public Movie saveMovie(Movie movie) {

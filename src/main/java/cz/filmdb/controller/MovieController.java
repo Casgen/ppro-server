@@ -29,15 +29,14 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public Movie getMovieById(@PathVariable String id) {
-
         return movieService.loadMovieById(Long.parseLong(id)).orElse(null);
     }
 
-    @GetMapping("/genres")
-    public List<Movie> getMoviesByGenres(@RequestParam(name = "ids") List<Long> genreIds) {
-        if (genreIds.isEmpty()) return List.of();
+    @GetMapping("/by-genres")
+    public Page<Movie> getMoviesByGenres(@RequestParam(name = "ids") List<String> genreIdsParam, Pageable pageable) {
+        List<Long> genreIds = genreIdsParam.stream().map(Long::parseLong).toList();
 
-        return movieService.loadMoviesByGenres(genreIds);
+        return movieService.loadMoviesByGenres(genreIds, pageable);
     }
 
     @PostMapping
