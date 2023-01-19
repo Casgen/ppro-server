@@ -1,7 +1,8 @@
 package cz.filmdb.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import cz.filmdb.enums.RoleType;
+import cz.filmdb.serial.OccupationSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.*;
 @Setter
 @Entity
 @Table(name = "occupation")
+@JsonSerialize(using = OccupationSerializer.class)
 public class Occupation {
 
     @Id

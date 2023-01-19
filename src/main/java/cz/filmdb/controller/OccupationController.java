@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/v1/occupations")
 @CrossOrigin("http://localhost:5173")
-public class OccupationsController {
+public class OccupationController {
 
     private final OccupationService occupationService;
 
     @Autowired
-    public OccupationsController(OccupationService occupationService) {
+    public OccupationController(OccupationService occupationService) {
         this.occupationService = occupationService;
     }
 

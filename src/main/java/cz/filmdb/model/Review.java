@@ -1,6 +1,8 @@
 package cz.filmdb.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import cz.filmdb.serial.ReviewSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 @Table
 @Getter
 @Setter
+@JsonSerialize(using = ReviewSerializer.class)
 public class Review {
 
     @Id
