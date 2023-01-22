@@ -78,17 +78,4 @@ public class UserService implements UserDetailsService {
 
         userRepository.deleteById(id);
     }
-
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public User updateUser(User updatedUser) {
-        Optional<User> oldUser = userRepository.findById(updatedUser.getId());
-
-        if (oldUser.isEmpty())
-            return null;
-
-        return userRepository.save(updatedUser);
-    }
 }

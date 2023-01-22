@@ -79,18 +79,4 @@ public class GenreService {
 
         genreRepository.deleteById(id);
     }
-
-    public Genre saveGenre(Genre genre) {
-        return genreRepository.save(genre);
-    }
-
-    public Genre updateGenre(Genre updatedGenre) {
-
-        Optional<Genre> oldGenre = genreRepository.findById(updatedGenre.getId());
-
-        if (oldGenre.isEmpty())
-            return null;
-
-        return genreRepository.save(updatedGenre);
-    }
 }
