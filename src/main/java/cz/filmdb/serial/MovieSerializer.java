@@ -18,20 +18,20 @@ public class MovieSerializer extends StdSerializer<Movie> {
     }
 
     @Override
-    public void serialize(Movie filmwork, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(Movie movie, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeStartObject();
 
-            jsonGenerator.writeNumberField("id", filmwork.getFid());
-            jsonGenerator.writeStringField("name", filmwork.getName());
-            jsonGenerator.writeNumberField("audienceScore", filmwork.getAudienceScore());
-            jsonGenerator.writeNumberField("criticsScore", filmwork.getCriticsScore());
-            jsonGenerator.writeStringField("releaseDate",filmwork.getReleaseDate().toString());
+            jsonGenerator.writeNumberField("id", movie.getId());
+            jsonGenerator.writeStringField("name", movie.getName());
+            jsonGenerator.writeNumberField("audienceScore", movie.getAudienceScore());
+            jsonGenerator.writeNumberField("criticsScore", movie.getCriticsScore());
+            jsonGenerator.writeStringField("releaseDate",movie.getReleaseDate().toString());
 
             // Genres
             jsonGenerator.writeArrayFieldStart("genres");
 
-                for (Genre genre : filmwork.getGenres()) {
+                for (Genre genre : movie.getGenres()) {
                     jsonGenerator.writeStartObject();
                     jsonGenerator.writeNumberField("id", genre.getId());
                     jsonGenerator.writeStringField("name", genre.getName());
@@ -43,7 +43,7 @@ public class MovieSerializer extends StdSerializer<Movie> {
             // Occupations
             jsonGenerator.writeArrayFieldStart("occupations");
 
-                for (Occupation occupation : filmwork.getOccupations()) {
+                for (Occupation occupation : movie.getOccupations()) {
 
                     jsonGenerator.writeStartObject();
                     jsonGenerator.writeNumberField("id", occupation.getId());
@@ -65,7 +65,7 @@ public class MovieSerializer extends StdSerializer<Movie> {
             // Occupations
             jsonGenerator.writeArrayFieldStart("reviews");
 
-                for (Review review : filmwork.getReviews()) {
+                for (Review review : movie.getReviews()) {
                     jsonGenerator.writeStartObject();
                     jsonGenerator.writeNumberField("id", review.getId());
 

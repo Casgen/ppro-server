@@ -36,7 +36,7 @@ public class ReviewSerializer extends StdSerializer<Review> {
             User user = review.getUser();
 
             jsonGenerator.writeNumberField("id", user.getId());
-            jsonGenerator.writeStringField("username", user.getUsername());
+            if (user.getUsername() != null) jsonGenerator.writeStringField("username", user.getUsername());
 
             jsonGenerator.writeEndObject();
         }
@@ -46,8 +46,8 @@ public class ReviewSerializer extends StdSerializer<Review> {
 
             Filmwork filmwork = review.getFilmwork();
 
-            jsonGenerator.writeNumberField("id", filmwork.getFid());
-            jsonGenerator.writeStringField("name", filmwork.getName());
+            jsonGenerator.writeNumberField("id", filmwork.getId());
+            if (filmwork.getName() != null) jsonGenerator.writeStringField("name", filmwork.getName());
 
             jsonGenerator.writeEndObject();
 

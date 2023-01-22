@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OccupationRepository extends JpaRepository<Occupation, Long> {
 
-    @Query("SELECT o FROM Occupation o JOIN o.filmwork filmwork WHERE filmwork.fid IN (:id)")
+    @Query("SELECT o FROM Occupation o JOIN o.filmwork filmwork WHERE filmwork.id IN (:id)")
     Page<Occupation> findAllByFilmWork(@Param("id") Long id, Pageable pageable);
 
     @Query("SELECT o FROM Occupation o JOIN o.person person WHERE person.id IN (:id)")

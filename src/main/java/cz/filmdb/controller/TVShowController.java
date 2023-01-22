@@ -1,11 +1,9 @@
 package cz.filmdb.controller;
 
-import cz.filmdb.model.Movie;
 import cz.filmdb.model.TVShow;
 import cz.filmdb.service.TVShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,22 +42,18 @@ public class TVShowController {
         return tvShowService.loadTvShowsByGenre(genreIds,pageable);
     }
     @PostMapping
-    public ResponseEntity.BodyBuilder createTvShow(@RequestBody TVShow tvShow) {
-        TVShow newTvShow = tvShowService.saveTvShow(tvShow);
-
-        if (newTvShow != null)
-            return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
+    public TVShow createTvShow(@RequestBody TVShow tvShow) {
+        return tvShowService.saveTvShow(tvShow);
     }
 
     @PutMapping
-    public ResponseEntity.BodyBuilder putTvShow(@RequestBody TVShow tvShow) {
-        TVShow updatedTvShow = tvShowService.updateTvShow(tvShow);
+    public TVShow putTvShow(@RequestBody TVShow tvShow) {
+        return tvShowService.updateTvShow(tvShow);
+    }
 
-        if (updatedTvShow != null)
-            return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTvShow(@PathVariable(name = "id") Long id) {
+        tvShowService.removeTvShow(id);
+        return ResponseEntity.ok().body("TV Show was removed successfully.");
     }
 }

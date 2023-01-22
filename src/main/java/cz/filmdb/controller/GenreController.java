@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/genres")
@@ -40,23 +39,19 @@ public class GenreController {
 
 
     @PostMapping
-    public ResponseEntity.BodyBuilder createGenre(@RequestBody Genre genre) {
-        Genre newGenre = genreService.saveGenre(genre);
-
-        if (newGenre != null)
-            return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
-
+    public Genre createGenre(@RequestBody Genre genre) {
+        return genreService.saveGenre(genre);
     }
 
     @PutMapping
-    public ResponseEntity.BodyBuilder putGenre(@RequestBody Genre genre) {
-        Genre updatedGenre = genreService.updateGenre(genre);
+    public Genre putGenre(@RequestBody Genre genre) {
+        return genreService.updateGenre(genre);
+    }
 
-        if (updatedGenre != null)
-            return ResponseEntity.ok();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteGenre(@PathVariable(name = "id") String id) {
+        genreService.removeGenreById(Long.parseLong(id));
 
-        return ResponseEntity.status(503);
+        return ResponseEntity.ok().body("Genre was removed succesfully");
     }
 }

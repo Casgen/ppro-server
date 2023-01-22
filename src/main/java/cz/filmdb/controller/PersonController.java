@@ -2,13 +2,10 @@ package cz.filmdb.controller;
 
 import cz.filmdb.model.Person;
 import cz.filmdb.service.PersonService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/people")
@@ -32,22 +29,21 @@ public class PersonController {
     }
 
     @PostMapping
-    public ResponseEntity.BodyBuilder createPerson(@RequestBody Person person) {
-        Person newPerson = personService.savePerson(person);
-
-        if (newPerson != null)
-            return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
+    public Person createPerson(@RequestBody Person person) {
+        return personService.savePerson(person);
     }
 
     @PutMapping
-    public ResponseEntity.BodyBuilder putPerson(@RequestBody Person person) {
-        Person updatedPerson = personService.updatePerson(person);
+    public Person putPerson(@RequestBody Person person) {
+        return personService.updatePerson(person);
+    }
 
-        if (updatedPerson != null)
-            return ResponseEntity.ok();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePerson(@PathVariable(name = "id") String id) {
 
-        return ResponseEntity.status(503);
+
+        personService.removePerson(Long.parseLong(id));
+
+        return ResponseEntity.ok().body("Person was deleted successfully.");
     }
 }

@@ -18,7 +18,7 @@ public class StorageServiceImpl implements StorageService {
     private final Path rootDir = Paths.get("files");
     private final Path imgsDir = rootDir.resolve("imgs");
     private final Path usrImgsDir = imgsDir.resolve("user");
-    private final Path filmWorkImgsDir = imgsDir.resolve("filmwork");
+    private final Path filmworkImgsDir = imgsDir.resolve("filmwork");
 
     @Override
     public void init() {
@@ -33,8 +33,8 @@ public class StorageServiceImpl implements StorageService {
             if (!Files.exists(usrImgsDir))
                 Files.createDirectory(usrImgsDir);
 
-            if (!Files.exists(filmWorkImgsDir))
-                Files.createDirectory(filmWorkImgsDir);
+            if (!Files.exists(filmworkImgsDir))
+                Files.createDirectory(filmworkImgsDir);
 
         } catch (IOException e) {
             throw new RuntimeException("Could not initialize the folders!", e);
@@ -71,9 +71,7 @@ public class StorageServiceImpl implements StorageService {
     public Stream<Path> loadAll() {
         try {
 
-            return Files.walk(rootDir, 3).filter(path -> {
-                return !path.equals(this.rootDir);
-            }).map(this.rootDir::relativize);
+            return Files.walk(rootDir, 3).filter(path -> !path.equals(this.rootDir)).map(this.rootDir::relativize);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

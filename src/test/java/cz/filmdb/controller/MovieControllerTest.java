@@ -1,8 +1,6 @@
 package cz.filmdb.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.filmdb.controller.MovieController;
-import cz.filmdb.model.Movie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -52,7 +49,7 @@ class MovieControllerTest {
         RequestBuilder req = MockMvcRequestBuilders.get(apiUrl)
                 .param("page", "2")
                 .param("size", "10")
-                .param("sort","fid,desc");
+                .param("sort","id,desc");
 
         mvc.perform(req).andExpect(status().isOk());
     }

@@ -1,10 +1,8 @@
 package cz.filmdb.conf;
 
-import cz.filmdb.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,10 +19,7 @@ public class WebSecurityConfig {
     private final JWTAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
-    private final String[] whitelistedURLs = new String[] {
-            "api/v1/auth/**"
-    };
-
+    /*
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -113,6 +108,44 @@ public class WebSecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        http.cors();
+
+        return http.build();
+    }*/
+
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http.csrf()
+                .disable()
+                .authorizeHttpRequests()
+                //These URLs won't require authentication
+                .requestMatchers(
+                        "/api/v1/users/**",
+                        "/api/v1/users",
+                        "/api/v1/movies/**",
+                        "/api/v1/movies",
+                        "/api/v1/tvshows/**",
+                        "/api/v1/tvshows",
+                        "/api/v1/reviews/**",
+                        "/api/v1/reviews",
+                        "/api/v1/people/**",
+                        "/api/v1/people",
+                        "/api/v1/genres/**",
+                        "/api/v1/genres",
+                        "/api/v1/files/**",
+                        "/api/v1/occupations/**"
+                )
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         http.cors();

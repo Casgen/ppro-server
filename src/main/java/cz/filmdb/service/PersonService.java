@@ -1,7 +1,6 @@
 package cz.filmdb.service;
 
 import cz.filmdb.model.Person;
-import cz.filmdb.repo.MovieRepository;
 import cz.filmdb.repo.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,12 +14,10 @@ import java.util.Optional;
 public class PersonService {
 
     private final PersonRepository personRepository;
-    private final MovieRepository movieRepository;
 
     @Autowired
-    public PersonService(PersonRepository personRepository, MovieRepository movieRepository) {
+    public PersonService(PersonRepository personRepository) {
         this.personRepository = personRepository;
-        this.movieRepository = movieRepository;
     }
 
 
@@ -59,5 +56,9 @@ public class PersonService {
             return null;
 
         return personRepository.save(updatedPerson);
+    }
+
+    public void removePerson(Long id) {
+        personRepository.deleteById(id);
     }
 }

@@ -20,6 +20,6 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     Page<Movie> findAllByAudienceScoreLessThanEqual(float score, Pageable pageable);
 
     @Query("SELECT DISTINCT m FROM Movie m JOIN m.genres genre JOIN genre.filmworks filmwork WHERE genre.id IN (:genreIds)")
-    Page<Movie> findAllByGenres(@Param("genreIds") List<Long> id, Pageable pageable);
+    Page<Movie> findAllByGenreIds(@Param("genreIds") List<Long> id, Pageable pageable);
 
 }

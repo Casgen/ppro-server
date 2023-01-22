@@ -28,12 +28,19 @@ public class PersonSerializer extends StdSerializer<Person> {
             jsonGenerator.writeStringField("lastName", person.getLastName());
 
             // Occupations
-            jsonGenerator.writeArrayFieldStart("occupations");
+            jsonGenerator.writeArrayFieldStart("casting");
 
                 for (Occupation occupation : person.getCasting()) {
                     jsonGenerator.writeStartObject();
                     jsonGenerator.writeNumberField("id", occupation.getId());
-                    jsonGenerator.writeNumberField("filmwork_id", occupation.getFilmwork().getFid());
+
+                    {
+                        jsonGenerator.writeObjectFieldStart("filmwork");
+                        jsonGenerator.writeNumberField("id", occupation.getFilmwork().getId());
+                        jsonGenerator.writeStringField("name", occupation.getFilmwork().getName());
+                        jsonGenerator.writeEndObject();
+                    }
+
                     jsonGenerator.writeStringField("role", occupation.getRole().name());
                     jsonGenerator.writeEndObject();
                 }

@@ -39,11 +39,15 @@ public class TVShowService {
 
     public TVShow updateTvShow(TVShow updatedTvShow) {
 
-        Optional<TVShow> oldTvShow = tvShowRepository.findById(updatedTvShow.getFid());
+        Optional<TVShow> oldTvShow = tvShowRepository.findById(updatedTvShow.getId());
 
         if (oldTvShow.isEmpty())
-            return null;
+            throw new NullPointerException("TVShow with a given id wasn't found!");
 
         return tvShowRepository.save(updatedTvShow);
+    }
+
+    public void removeTvShow(Long id) {
+        tvShowRepository.deleteById(id);
     }
 }

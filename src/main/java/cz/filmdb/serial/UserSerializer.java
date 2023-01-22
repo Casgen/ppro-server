@@ -25,6 +25,7 @@ public class UserSerializer extends StdSerializer<User> {
 
             jsonGenerator.writeNumberField("id", user.getId());
             jsonGenerator.writeStringField("email", user.getEmail());
+            jsonGenerator.writeStringField("username", user.getUsername());
 
             // Reviews
             jsonGenerator.writeArrayFieldStart("reviews");
@@ -33,7 +34,17 @@ public class UserSerializer extends StdSerializer<User> {
                     jsonGenerator.writeStartObject();
                     jsonGenerator.writeNumberField("id", review.getId());
                     jsonGenerator.writeStringField("comment", review.getComment());
-                    jsonGenerator.writeNumberField("filmwork_id",review.getFilmwork().getFid());
+
+                    {
+                        jsonGenerator.writeObjectFieldStart("filmwork");
+
+                        jsonGenerator.writeNumberField("id",review.getFilmwork().getId());
+                        jsonGenerator.writeStringField("name",review.getFilmwork().getName());
+
+                        jsonGenerator.writeEndObject();
+
+                    }
+
                     jsonGenerator.writeStringField("date", review.getDate().toString());
                     jsonGenerator.writeNumberField("score", review.getScore());
                     jsonGenerator.writeEndObject();

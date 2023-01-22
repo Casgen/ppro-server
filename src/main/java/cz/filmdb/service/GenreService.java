@@ -1,22 +1,27 @@
 package cz.filmdb.service;
 
+import cz.filmdb.model.Filmwork;
 import cz.filmdb.model.Genre;
+import cz.filmdb.repo.FilmWorkRepository;
 import cz.filmdb.repo.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class GenreService {
 
-    private GenreRepository genreRepository;
+    private final GenreRepository genreRepository;
+    private final FilmWorkRepository filmworkRepository;
 
     @Autowired
-    public GenreService(GenreRepository genreRepository) {
+    public GenreService(GenreRepository genreRepository, FilmWorkRepository filmworkRepository) {
         this.genreRepository = genreRepository;
+        this.filmworkRepository = filmworkRepository;
     }
 
     public Optional<Genre> loadGengreById(Long id) {
@@ -43,5 +48,35 @@ public class GenreService {
             return null;
 
         return genreRepository.save(updatedGenre);
+    }
+
+    public void removeGenre(Genre genre) {
+
+        if (genre == null)
+            throw new NullPointerException("Genre with a given id wasn't found!");
+
+        List<Filmwork> associatedFilmworks = filmworkRepository.findAllByGenreIds(List.of(genre.getId()));
+
+        for (Filmwork filmwork : associatedFilmworks) {
+            filmwork.removeGenre(genre);
+        }
+
+        genreRepository.delete(genre);
+    }
+
+    public void removeGenreById(Long id) {
+
+        Optional<Genre> foundGenre = genreRepository.findById(id);
+
+        if (foundGenre.isEmpty())
+            throw new NullPointerException("Genre with a given id wasn't found!");
+
+        List<Filmwork> associatedFilmworks = filmworkRepository.findAllByGenreIds(List.of(id));
+
+        for (Filmwork filmwork : associatedFilmworks) {
+            filmwork.removeGenre(foundGenre.get());
+        }
+
+        genreRepository.deleteById(id);
     }
 }

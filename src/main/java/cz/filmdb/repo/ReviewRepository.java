@@ -13,12 +13,12 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    @Query("SELECT r FROM Review r JOIN r.filmwork filmworks JOIN r.user users WHERE filmworks.fid IN (:filmworkId)")
-    public Page<Review> findAllByFilmwork(@Param("filmworkId") Long id, Pageable pageable);
+    @Query("SELECT r FROM Review r JOIN r.filmwork filmworks JOIN r.user users WHERE filmworks.id IN (:filmworkId)")
+    Page<Review> findAllByFilmwork(@Param("filmworkId") Long id, Pageable pageable);
 
-    @Query("SELECT r FROM Review r JOIN r.filmwork filmworks JOIN r.user users WHERE filmworks.fid IN (:userId)")
-    public List<Review> findAllByUser(@Param("userId") Long id);
+    @Query("SELECT r FROM Review r JOIN r.filmwork filmworks JOIN r.user users WHERE filmworks.id IN (:userId)")
+    List<Review> findAllByUser(@Param("userId") Long id);
 
-    @Query("SELECT r FROM Review r JOIN r.filmwork filmworks JOIN r.user users WHERE filmworks.fid IN (:userId)")
-    public Page<Review> findAllByUser(@Param("userId") Long id, Pageable pageable);
+    @Query("SELECT r FROM Review r JOIN r.filmwork filmworks JOIN r.user users WHERE filmworks.id IN (:userId)")
+    Page<Review> findAllByUser(@Param("userId") Long id, Pageable pageable);
 }

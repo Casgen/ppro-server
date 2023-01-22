@@ -1,7 +1,9 @@
 package cz.filmdb.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import cz.filmdb.deserial.UserDeserializer;
 import cz.filmdb.serial.UserSerializer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.Set;
 @Table
 @AllArgsConstructor
 @JsonSerialize(using = UserSerializer.class)
+@JsonDeserialize(using = UserDeserializer.class)
 // The needed getUsername() and getPassword() methods are already overridden by the lombok @Getter annotation
 public class User implements UserDetails {
 
@@ -47,12 +50,10 @@ public class User implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private UserRole userRole;
 
 
     // Users which will watch, wont watch, have watched or is watching some movies or tv shows.
-
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "plans_to_watch",
             joinColumns = {
@@ -99,33 +100,38 @@ public class User implements UserDetails {
             }
     )
     @JsonManagedReference("users-watched-ref")
-    private Set<Filmwork> haveWatched;
+    private Set<Filmwork> hasWatched;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     @JsonManagedReference("users-reviews-ref")
     public Set<Review> userReviews;
 
 
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
-
-    public User(Long id, String username) {
-        this.username = username;
-        this.id = id;
-    }
-
     public User(Long id, String username, String email, String password) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.userReviews = Set.of();
+        this.hasWatched = Set.of();
+        this.wontWatch = Set.of();
+        this.isWatching = Set.of();
+    }
+
+    public User(Long id, String username, String email, String password, UserRole userRole) {
+        this(id, username, email, password);
+        this.userRole = userRole;
+    }
+
+    public User(String username, String email, String password, UserRole userRole) {
+        this(null, username, email, password, userRole);
     }
 
     public User() {
+    }
 
+    public User(Long id, String username) {
+        this(id, username, null, null, null);
     }
 
     @Override
@@ -140,7 +146,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(userRole.name()));
     }
 
     @Override

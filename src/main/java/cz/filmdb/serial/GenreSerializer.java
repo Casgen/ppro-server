@@ -31,7 +31,7 @@ public class GenreSerializer extends StdSerializer<Genre> {
 
             for (Filmwork filmwork : genre.getFilmworks()) {
                 jsonGenerator.writeStartObject();
-                jsonGenerator.writeNumberField("id", filmwork.getFid());
+                jsonGenerator.writeNumberField("id", filmwork.getId());
                 jsonGenerator.writeStringField("name", filmwork.getName());
                 jsonGenerator.writeNumberField("audienceScore", filmwork.getAudienceScore());
                 jsonGenerator.writeNumberField("criticsScore", filmwork.getCriticsScore());

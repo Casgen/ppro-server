@@ -8,14 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/v1/reviews")
 @CrossOrigin("http://localhost:5173")
 public class ReviewController {
 
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
 
     @Autowired
     public ReviewController(ReviewService reviewService) {
@@ -38,21 +36,18 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity.BodyBuilder createReview(@RequestBody Review review) {
-        Review newReview = reviewService.saveReview(review);
-
-        if (newReview != null) return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
+    public Review createReview(@RequestBody Review review) {
+        return reviewService.saveReview(review);
     }
 
     @PutMapping
-    public ResponseEntity.BodyBuilder putReview(@RequestBody Review review) {
-        Review updatedReview = reviewService.updateReview(review);
+    public Review putReview(@RequestBody Review review) {
+        return reviewService.updateReview(review);
+    }
 
-        if (updatedReview != null)
-            return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteReview(@PathVariable Long id) {
+        reviewService.removeReview(id);
+        return ResponseEntity.ok().body("Review was deleted successfully");
     }
 }

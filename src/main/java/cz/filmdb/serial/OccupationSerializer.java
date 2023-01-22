@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import cz.filmdb.model.Filmwork;
 import cz.filmdb.model.Occupation;
 import cz.filmdb.model.Person;
+import cz.filmdb.service.OccupationService;
 
 import java.io.IOException;
 
@@ -32,7 +33,7 @@ public class OccupationSerializer extends StdSerializer<Occupation> {
 
             Filmwork filmwork = occupation.getFilmwork();
 
-            jsonGenerator.writeNumberField("id", filmwork.getFid());
+            jsonGenerator.writeNumberField("id", filmwork.getId());
             jsonGenerator.writeStringField("name", filmwork.getName());
             jsonGenerator.writeNumberField("audienceScore", filmwork.getAudienceScore());
 

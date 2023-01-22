@@ -40,22 +40,18 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity.BodyBuilder createMovie(@RequestBody Movie movie) {
-        Movie newMovie = movieService.saveMovie(movie);
-
-        if (newMovie != null)
-            return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
+    public Movie createMovie(@RequestBody Movie movie) {
+        return movieService.saveMovie(movie);
     }
 
     @PutMapping
-    public ResponseEntity.BodyBuilder putMovie(@RequestBody Movie movie) {
-        Movie updatedMovie = movieService.updateMovie(movie);
+    public Movie putMovie(@RequestBody Movie movie) {
+        return movieService.updateMovie(movie);
+    }
 
-        if (updatedMovie != null)
-            return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMovie(@PathVariable(name = "id") String id) {
+        movieService.removeMovie(Long.parseLong(id));
+        return ResponseEntity.ok().body("Movie was successfully deleted.");
     }
 }

@@ -1,7 +1,8 @@
 package cz.filmdb.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import cz.filmdb.deserial.PersonDeserializer;
 import cz.filmdb.serial.PersonSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import java.util.Set;
 @Entity
 @Table
 @JsonSerialize(using = PersonSerializer.class)
+@JsonDeserialize(using = PersonDeserializer.class)
 public class Person {
     @Id
     @SequenceGenerator(
@@ -33,13 +35,18 @@ public class Person {
     @Column(name = "last_name")
     private String lastName;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Occupation> casting;
 
     public Person(Long id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public Person(Long id, String firstName, String lastName, Set<Occupation> casting) {
+        this(id, firstName, lastName);
+        this.casting = casting;
     }
 
     public Person(String firstName, String lastName) {

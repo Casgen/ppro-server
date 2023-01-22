@@ -44,6 +44,20 @@ public class ReviewService {
         if (oldReview.isEmpty())
             return null;
 
+        if (updatedReview.getDate() == null)
+            updatedReview.setDate(oldReview.get().getDate());
+
         return reviewRepository.save(updatedReview);
+    }
+
+    public void removeReview(Long id) {
+
+        Optional<Review> foundReview = reviewRepository.findById(id);
+
+        if (foundReview.isEmpty())
+            throw new NullPointerException("Review for deletion wasn't found!");
+
+        reviewRepository.deleteById(id);
+
     }
 }

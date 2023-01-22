@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,10 +17,12 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Page<User> loadUsers(Pageable pageable) {
@@ -45,6 +48,34 @@ public class UserService implements UserDetailsService {
         if (oldUser.isEmpty())
             return null;
 
+        if (updatedUser.getUserRole() == null)
+            updatedUser.setUserRole(oldUser.get().getUserRole());
+
+        if (updatedUser.getPassword() != null) {
+
+            String updatedPassword = passwordEncoder.encode(updatedUser.getPassword());
+
+            if (!oldUser.get().getPassword().equals(updatedPassword)) {
+                updatedUser.setPassword(updatedPassword);
+            } else {
+                updatedUser.setPassword(oldUser.get().getPassword());
+            }
+
+            return userRepository.save(updatedUser);
+        }
+
+        updatedUser.setPassword(oldUser.get().getPassword());
+
         return userRepository.save(updatedUser);
+    }
+
+    public void removeUser(Long id) {
+
+        Optional<User> foundUser = userRepository.findById(id);
+
+        if (foundUser.isEmpty())
+            throw new NullPointerException("User with the given id wasn't found!");
+
+        userRepository.deleteById(id);
     }
 }
