@@ -1,8 +1,12 @@
 package cz.filmdb.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import cz.filmdb.deserial.OccupationDeserializer;
 import cz.filmdb.enums.RoleType;
+import cz.filmdb.serial.OccupationSerializer;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +16,9 @@ import java.util.*;
 @Setter
 @Entity
 @Table(name = "occupation")
+@AllArgsConstructor
+@JsonSerialize(using = OccupationSerializer.class)
+@JsonDeserialize(using = OccupationDeserializer.class)
 public class Occupation {
 
     @Id
@@ -26,12 +33,12 @@ public class Occupation {
     )
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "filmwork_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "filmwork_id")
     private Filmwork filmwork;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "person_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "person_id")
     private Person person;
 
     @Enumerated(EnumType.STRING)
@@ -44,6 +51,7 @@ public class Occupation {
     }
 
     public Occupation(Long id, Person person, RoleType role) {
+        this.id = id;
         this.filmwork = null;
         this.role = role;
         this.person = person;

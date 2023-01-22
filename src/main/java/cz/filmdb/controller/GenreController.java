@@ -3,21 +3,28 @@ package cz.filmdb.controller;
 import cz.filmdb.model.Genre;
 import cz.filmdb.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/genres")
 @CrossOrigin("http://localhost:5173")
 public class GenreController {
 
-    private GenreService genreService;
+    private final GenreService genreService;
 
     @Autowired
     public GenreController(GenreService genreService) {
         this.genreService = genreService;
+    }
+
+
+    @GetMapping
+    public Page<Genre> getGenres(Pageable pageable) {
+        return genreService.getAllGenres(pageable);
     }
 
     @GetMapping("/{id}")
@@ -25,35 +32,26 @@ public class GenreController {
         return genreService.loadGengreById(Long.parseLong(id)).orElse(null);
     }
 
-    @GetMapping
-    public List<Genre> getGenres() {
-        return genreService.getAllGenres();
-    }
-
     @GetMapping("/search")
-    public List<Genre> searchGenresByQuery(@RequestParam String query) {
-        return genreService.searchGenres(query);
+    public Page<Genre> searchGenresByQuery(@RequestParam String query, Pageable pageable) {
+        return genreService.searchGenres(query, pageable);
     }
 
 
     @PostMapping
-    public ResponseEntity.BodyBuilder createGenre(@RequestBody Genre genre) {
-        Genre newGenre = genreService.saveGenre(genre);
-
-        if (newGenre != null)
-            return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
-
+    public Genre createGenre(@RequestBody Genre genre) {
+        return genreService.saveGenre(genre);
     }
 
     @PutMapping
-    public ResponseEntity.BodyBuilder putGenre(@RequestBody Genre genre) {
-        Genre updatedGenre = genreService.updateGenre(genre);
+    public Genre putGenre(@RequestBody Genre genre) {
+        return genreService.updateGenre(genre);
+    }
 
-        if (updatedGenre != null)
-            return ResponseEntity.ok();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteGenre(@PathVariable(name = "id") String id) {
+        genreService.removeGenreById(Long.parseLong(id));
 
-        return ResponseEntity.status(503);
+        return ResponseEntity.ok().body("Genre was removed succesfully");
     }
 }

@@ -3,26 +3,26 @@ package cz.filmdb.controller;
 import cz.filmdb.model.User;
 import cz.filmdb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/users")
 @CrossOrigin("http://localhost:5173")
 public class UserController {
 
-    private UserService userService;
-
+    private final UserService userService;
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
-    public List<User> getUsers() {
-        return userService.loadUsers();
+    public Page<User> getUsers(Pageable pageable) {
+        return userService.loadUsers(pageable);
     }
 
     @GetMapping("/{id}")
@@ -31,23 +31,26 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity.BodyBuilder createUser(@RequestBody User user) {
-        User newUser = userService.saveUser(user);
-
-        if (newUser != null)
-            return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
+    public User createUser(@RequestBody User user) {
+        return userService.saveUser(user);
     }
 
     @PutMapping
-    public ResponseEntity.BodyBuilder putPerson(@RequestBody User user) {
+    public ResponseEntity<String> putUser(@RequestBody User user) {
         User updatedUser = userService.updateUser(user);
 
         if (updatedUser != null)
-            return ResponseEntity.ok();
+            return ResponseEntity.ok().body("User was updated successfully.");
 
-        return ResponseEntity.status(503);
+        return ResponseEntity.status(503).body("Error occured while updating the user!");
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable(name = "id") Long id) {
+        userService.removeUser(id);
+
+        return ResponseEntity.ok().body("User was removed successfully.");
+    }
+
+    // TODO: Add have watched, won't watch, is watching and plans to watch endpoints!
 }

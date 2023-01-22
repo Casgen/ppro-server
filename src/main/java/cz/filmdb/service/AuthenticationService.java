@@ -23,7 +23,7 @@ public class AuthenticationService {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .userRole(UserRole.USER)
                 .build();
         userRepository.save(user);
 
@@ -39,7 +39,7 @@ public class AuthenticationService {
         authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
 
         // TODO: Handle the exception
-        User user = userRepository.findUserByUsername(request.getUsername());
+        User user = userRepository.findByUsername(request.getUsername());
 
 
         String jwtToken = jwtService.generateToken(user);

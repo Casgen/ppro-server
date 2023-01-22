@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class FilmWorkService {
 
-    private FilmWorkRepository filmWorkRepository;
+    private final FilmWorkRepository filmworkRepository;
 
     @Autowired
-    public FilmWorkService(FilmWorkRepository filmWorkRepository) {
-        this.filmWorkRepository = filmWorkRepository;
+    public FilmWorkService(FilmWorkRepository filmworkRepository) {
+        this.filmworkRepository = filmworkRepository;
     }
 }

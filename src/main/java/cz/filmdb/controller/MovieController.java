@@ -29,34 +29,29 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public Movie getMovieById(@PathVariable String id) {
-
         return movieService.loadMovieById(Long.parseLong(id)).orElse(null);
     }
 
-    @GetMapping("/genres")
-    public List<Movie> getMoviesByGenres(@RequestParam(name = "ids") List<Long> genreIds) {
-        if (genreIds.isEmpty()) return List.of();
+    @GetMapping("/by-genres")
+    public Page<Movie> getMoviesByGenres(@RequestParam(name = "ids") List<String> genreIdsParam, Pageable pageable) {
+        List<Long> genreIds = genreIdsParam.stream().map(Long::parseLong).toList();
 
-        return movieService.loadMoviesByGenres(genreIds);
+        return movieService.loadMoviesByGenres(genreIds, pageable);
     }
 
     @PostMapping
-    public ResponseEntity.BodyBuilder createMovie(@RequestBody Movie movie) {
-        Movie newMovie = movieService.saveMovie(movie);
-
-        if (newMovie != null)
-            return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
+    public Movie createMovie(@RequestBody Movie movie) {
+        return movieService.saveMovie(movie);
     }
 
     @PutMapping
-    public ResponseEntity.BodyBuilder putMovie(@RequestBody Movie movie) {
-        Movie updatedMovie = movieService.updateMovie(movie);
+    public Movie putMovie(@RequestBody Movie movie) {
+        return movieService.updateMovie(movie);
+    }
 
-        if (updatedMovie != null)
-            return ResponseEntity.ok();
-
-        return ResponseEntity.status(503);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMovie(@PathVariable(name = "id") String id) {
+        movieService.removeMovie(Long.parseLong(id));
+        return ResponseEntity.ok().body("Movie was successfully deleted.");
     }
 }

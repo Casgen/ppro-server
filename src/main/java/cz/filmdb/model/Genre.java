@@ -1,7 +1,8 @@
 package cz.filmdb.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import cz.filmdb.deserial.GenreDeserializer;
 import cz.filmdb.serial.GenreSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Table
 @Entity
 @JsonSerialize(using = GenreSerializer.class)
+@JsonDeserialize(using = GenreDeserializer.class)
 public class Genre {
 
     @Id
@@ -32,7 +34,7 @@ public class Genre {
 
     private String name;
 
-    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<Filmwork> filmworks;
 
     public Genre(String name) {
@@ -44,13 +46,20 @@ public class Genre {
         this.name = name;
     }
 
+    public Genre(Long id, String name, Set<Filmwork> filmworks) {
+        this.id = id;
+        this.name = name;
+        this.filmworks = filmworks;
+    }
+
     public Genre() {
 
     }
 
     public Genre(Genre newGenre) {
-        id = newGenre.id;
-        name = newGenre.name;
+        this.id = newGenre.id;
+        this.name = newGenre.name;
+        this.filmworks = newGenre.filmworks;
     }
 
     @Override
@@ -59,5 +68,15 @@ public class Genre {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public void addFilmwork(Filmwork filmwork) {
+        this.filmworks.add(filmwork);
+        filmwork.getGenres().add(this);
+    }
+
+    public void removeFilmwork(Filmwork filmwork) {
+        this.filmworks.remove(filmwork);
+        filmwork.getGenres().remove(this);
     }
 }

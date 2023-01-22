@@ -1,6 +1,5 @@
 package cz.filmdb.deserial;
 
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,26 +13,30 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MovieDeserializer extends StdDeserializer<Movie> {
+public class TVShowDeserializer extends StdDeserializer<TVShow> {
 
-    public MovieDeserializer() {
+    public TVShowDeserializer() {
         this(null);
     }
 
-    protected MovieDeserializer(Class<?> vc) {
+    public TVShowDeserializer(Class<?> vc) {
         super(vc);
     }
 
+
     @Override
-    public Movie deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    public TVShow deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+
         JsonNode rootNode = jsonParser.getCodec().readTree(jsonParser);
 
         //Required
         String name = rootNode.get("name").asText();
+        LocalDate runningFrom = LocalDate.parse(rootNode.get("runningFrom").asText());
 
         // Optional
+        int numberOfSeasons = rootNode.has("numberOfSeasons") ? rootNode.get("numberOfSeasons").asInt() : 0;
         Long id = rootNode.has("id") ? rootNode.get("id").asLong() : null;
-        LocalDate releaseDate = rootNode.has("releaseDate") ? LocalDate.parse(rootNode.get("releaseDate").asText()) : null;
+        LocalDate runningTo = rootNode.has("runningTo") ? LocalDate.parse(rootNode.get("runningTo").asText()) : null;
         float audienceScore = (float) (rootNode.has("audienceScore") ? rootNode.get("audienceScore").asDouble() : 0.0);
         float criticsScore = (float) (rootNode.has("criticsScore") ? rootNode.get("criticsScore").asDouble() : 0.0);
 
@@ -41,7 +44,7 @@ public class MovieDeserializer extends StdDeserializer<Movie> {
         Set<Occupation> occupations = getOccupations(rootNode);
         Set<Review> reviews = getReviews(rootNode);
 
-        return new Movie(id,name,audienceScore,criticsScore,genres,occupations,reviews,releaseDate);
+        return new TVShow(id, name, audienceScore, criticsScore, genres, occupations, reviews, numberOfSeasons, runningFrom, runningTo);
     }
 
     private Set<Genre> getGenres(JsonNode rootNode) {
@@ -104,15 +107,16 @@ public class MovieDeserializer extends StdDeserializer<Movie> {
 
         Set<Review> reviews = new HashSet<>();
 
-        for (JsonNode reviewNode : reviewsSetNode) {
-            Long id = reviewNode.get("id").asLong();
-            String comment = reviewNode.get("comment").asText();
-            LocalDateTime date = LocalDateTime.parse(reviewNode.get("date").asText());
-            float score = (float) reviewNode.get("score").asDouble();
+        for (JsonNode reviewsNode : reviewsSetNode) {
+            
+            Long id = reviewsNode.get("id").asLong();
+            String comment = reviewsNode.get("comment").asText();
+            LocalDateTime date = LocalDateTime.parse(reviewsNode.get("date").asText());
+            float score = (float) reviewsNode.get("score").asDouble();
 
             User user;
             {
-                JsonNode userNode = reviewNode.get("user");
+                JsonNode userNode = reviewsNode.get("user");
 
                 Long usersId = userNode.get("id").asLong();
                 String username = userNode.get("username").asText();
@@ -125,5 +129,4 @@ public class MovieDeserializer extends StdDeserializer<Movie> {
 
         return reviews;
     }
-
 }

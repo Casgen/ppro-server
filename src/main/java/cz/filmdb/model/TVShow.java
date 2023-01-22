@@ -1,51 +1,53 @@
 package cz.filmdb.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import cz.filmdb.deserial.TVShowDeserializer;
+import cz.filmdb.serial.TVShowSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Setter
 @Getter
 @Entity
+@Table(name = "tvshow")
+@JsonSerialize(using = TVShowSerializer.class)
+@JsonDeserialize(using = TVShowDeserializer.class)
 public class TVShow extends Filmwork {
 
     @Column(name = "number_of_seasons")
     private int numberOfSeasons;
 
     @Column(name = "running_from")
-    private Date runningFrom;
+    private LocalDate runningFrom;
 
-    @Column(name = "running_to", nullable = true)
-    private Date runningTo;
+    @Column(name = "running_to")
+    private LocalDate runningTo;
 
 
-    public TVShow(String name, Date runningFrom, Set<Genre> genres, int numberOfSeasons) {
+    public TVShow(String name, LocalDate runningFrom, LocalDate runningTo, Set<Genre> genres, int numberOfSeasons) {
         super(name, genres);
         this.numberOfSeasons = numberOfSeasons;
         this.runningFrom = runningFrom;
-    }
-
-    public TVShow(String name, int numberOfSeasons, Set<Person> creators) {
-        super(name);
-        this.numberOfSeasons = numberOfSeasons;
-        this.runningFrom = null;
+        this.runningTo = runningTo;
     }
 
     public TVShow() {
         super();
         this.numberOfSeasons = 0;
-        this.runningFrom = new Date(0);
+        this.runningFrom = LocalDate.of(LocalDate.MIN.getYear(), LocalDate.MIN.getMonth(), LocalDate.MIN.getDayOfMonth());
         this.runningTo = null;
     }
 
-    public TVShow(TVShow newTvShow) {
-        super(newTvShow.fid, newTvShow.name,newTvShow.genres);
-        numberOfSeasons = newTvShow.numberOfSeasons;
-        runningFrom = newTvShow.runningFrom;
-        runningTo = newTvShow.runningTo;
+    public TVShow(Long id, String name, float audienceScore, float criticsScore, Set<Genre> genres,
+                  Set<Occupation> occupations, Set<Review> reviews, int numberOfSeasons, LocalDate runningFrom, LocalDate runningTo) {
+        super(id, name,audienceScore, criticsScore, genres,occupations,reviews);
+        this.runningTo = runningTo;
+        this.runningFrom = runningFrom;
+        this.numberOfSeasons = numberOfSeasons;
     }
 }

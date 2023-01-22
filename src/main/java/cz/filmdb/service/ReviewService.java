@@ -3,6 +3,8 @@ package cz.filmdb.service;
 import cz.filmdb.model.Review;
 import cz.filmdb.repo.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,14 +21,18 @@ public class ReviewService {
     }
 
     public List<Review> loadReviewsByUser(Long id) {
-        return reviewRepository.findReviewsByUser(id);
+        return reviewRepository.findAllByUser(id);
     }
 
-    public List<Review> loadReviewsByFilmwork(Long id) {
-        return reviewRepository.findReviewsByFilmwork(id);
+    public Page<Review> loadReviewsByUser(Long id, Pageable pageable) {
+        return reviewRepository.findAllByUser(id, pageable);
     }
 
-    public List<Review> loadReviews() { return reviewRepository.findAll();}
+    public Page<Review> loadReviewsByFilmwork(Long id, Pageable pageable) {
+        return reviewRepository.findAllByFilmwork(id, pageable);
+    }
+
+    public Page<Review> loadReviews(Pageable pageable) { return reviewRepository.findAll(pageable);}
 
     public Review saveReview(Review review) {
         return reviewRepository.save(review);
@@ -38,6 +44,20 @@ public class ReviewService {
         if (oldReview.isEmpty())
             return null;
 
+        if (updatedReview.getDate() == null)
+            updatedReview.setDate(oldReview.get().getDate());
+
         return reviewRepository.save(updatedReview);
+    }
+
+    public void removeReview(Long id) {
+
+        Optional<Review> foundReview = reviewRepository.findById(id);
+
+        if (foundReview.isEmpty())
+            throw new NullPointerException("Review for deletion wasn't found!");
+
+        reviewRepository.deleteById(id);
+
     }
 }

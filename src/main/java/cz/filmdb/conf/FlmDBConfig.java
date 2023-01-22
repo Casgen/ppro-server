@@ -5,10 +5,8 @@ import cz.filmdb.model.*;
 import cz.filmdb.repo.*;
 import cz.filmdb.service.StorageService;
 import cz.filmdb.service.StorageServiceImpl;
-import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -16,12 +14,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -29,7 +24,6 @@ import java.util.*;
 @Configuration
 @EnableSpringDataWebSupport
 public class FlmDBConfig {
-
 
     private final UserRepository userRepository;
 
@@ -39,13 +33,13 @@ public class FlmDBConfig {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(MovieRepository movieRepository, GenreRepository genreRepository,
-                                        PersonRepository personRepository, OccupationRepository occupationRepository,
+    CommandLineRunner commandLineRunner(PersonRepository personRepository, OccupationRepository occupationRepository,
                                         UserRepository userRepository, ReviewRepository reviewRepository,
-                                        FilmWorkRepository filmWorkRepository) {
+                                        FilmWorkRepository filmworkRepository) {
         return args -> {
 
             List<Person> people = new ArrayList<>();
+
             //People
             Person ridleyScott = new Person("Ridley", "Scott");
             Person sigourneyWeaver = new Person("Sigourney", "Weaver");
@@ -65,11 +59,18 @@ public class FlmDBConfig {
             Person samWorthington = new Person("Sam", "Worthington");
             Person zoeSaldana = new Person("Zoe", "Saldana");
 
+            // -----------
+
+            Person steveCarrel = new Person("Steve", "Carrel");
+            Person jennaFischer = new Person("Jenna", "Fischer");
+            Person johnKrasinski = new Person("John", "Krasinski");
+
+
             List<User> users = new ArrayList<>();
 
-            User basicJoe = new User("basicjoe231", "basic.joe@gmail.com", "123456");
-            User mckinsley = new User("mckinsley", "mckinsley87@gmail.com", "123456");
-            User elenorRigby = new User("elenorRigby", "elenor.Rigby@gmail.com", "3890jdfhs");
+            User basicJoe = new User("basicjoe231", "basic.joe@gmail.com", "123456", UserRole.USER);
+            User mckinsley = new User("mckinsley", "mckinsley87@gmail.com", "123456", UserRole.USER);
+            User elenorRigby = new User("elenorRigby", "elenor.Rigby@gmail.com", "3890jdfhs", UserRole.USER);
 
             users.add(basicJoe);
             users.add(mckinsley);
@@ -94,6 +95,10 @@ public class FlmDBConfig {
             people.add(samWorthington);
             people.add(zoeSaldana);
 
+            people.add(steveCarrel);
+            people.add(jennaFischer);
+            people.add(johnKrasinski);
+
             personRepository.saveAll(people);
 
             //Genres
@@ -102,9 +107,10 @@ public class FlmDBConfig {
             Genre crime = new Genre("Crime");
             Genre drama = new Genre("Drama");
             Genre scifi = new Genre("Sci-fi");
+            Genre mockumentary = new Genre("Mockumentary");
+            Genre comedy = new Genre("Comedy");
 
             // ATTENTION: We don't have to persist the genres if they are referenced by a movie or a TV Show.
-            // If an object is found with referenced objects, those referenced objects will be saved automatically. that means
             // if we save for example the movies, the saving will also propagate to the genres implicitly.
             // And that is why we get the PersistentObjectException (the genres which are saved or persisted beforehand
             // are detached from the current session)
@@ -113,12 +119,15 @@ public class FlmDBConfig {
 
 
 
-            //Movies
+            // Movies
             Filmwork alien = new Movie("Alien", LocalDate.of(1979,3,13), Set.of(scifi, horror));
             Filmwork killBill = new Movie("Kill Bill Vol. 1", LocalDate.of(2003, 9, 29), Set.of(action,crime,drama));
             Filmwork avatar = new Movie("Avatar", LocalDate.of(2009, 9, 23), Set.of(action, scifi));
 
-            filmWorkRepository.saveAll(List.of(alien,killBill,avatar));
+            // TVShows
+            Filmwork theOffice = new TVShow("The Office", LocalDate.of(2005, 3, 16),LocalDate.of(2013, 5, 16), Set.of(comedy, mockumentary), 9);
+
+            filmworkRepository.saveAll(List.of(alien,killBill,avatar, theOffice));
 
             //Filmwork occupations
             Map<Person, List<RoleType>> alienOccupations = new HashMap<>();
@@ -145,13 +154,21 @@ public class FlmDBConfig {
             avatarOccupations.put(samWorthington, List.of(RoleType.ACTOR));
             avatarOccupations.put(zoeSaldana, List.of(RoleType.ACTOR));
 
+            Map<Person, List<RoleType>> theOfficeOccupations = new HashMap<>();
+            theOfficeOccupations.put(steveCarrel, List.of(RoleType.ACTOR));
+            theOfficeOccupations.put(jennaFischer, List.of(RoleType.ACTOR));
+            theOfficeOccupations.put(johnKrasinski, List.of(RoleType.ACTOR));
+
             alien.setOccupations(alienOccupations);
             avatar.setOccupations(avatarOccupations);
             killBill.setOccupations(killBillOccupations);
+            theOffice.setOccupations(theOfficeOccupations);
 
             occupationRepository.saveAll(Occupation.of(alien,alienOccupations));
             occupationRepository.saveAll(Occupation.of(killBill,killBillOccupations));
             occupationRepository.saveAll(Occupation.of(avatar,avatarOccupations));
+            occupationRepository.saveAll(Occupation.of(theOffice,theOfficeOccupations));
+
 
             List<Review> reviews = new ArrayList<>();
 
@@ -184,7 +201,7 @@ public class FlmDBConfig {
 
         return new InMemoryUserDetailsManager(userDetails);*/
 
-        return username -> userRepository.findUserByUsername(username);
+        return userRepository::findByUsername;
 
     }
 

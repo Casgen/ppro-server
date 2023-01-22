@@ -1,6 +1,6 @@
 package cz.filmdb.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import cz.filmdb.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class Filmwork {
             strategy = GenerationType.SEQUENCE,
             generator = "filmwork_sequence"
     )
-    protected Long fid;
+    protected Long id;
 
     @Column(nullable = false)
     protected String name;
@@ -32,10 +32,10 @@ public class Filmwork {
     @Transient
     protected transient float audienceScore;
 
-    @Column(name = "critics_score", nullable = true)
+    @Column(name = "critics_score")
     protected float criticsScore;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "filmwork_genre",
             joinColumns = {
                     @JoinColumn(name = "filmwork_id"),
@@ -46,7 +46,7 @@ public class Filmwork {
     )
     protected Set<Genre> genres;
 
-    @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL, orphanRemoval = true)
     protected Set<Occupation> occupations;
 
     @OneToMany(mappedBy = "filmwork", cascade = CascadeType.ALL)
@@ -56,15 +56,19 @@ public class Filmwork {
     // Users which will watch, wont watch, have watched or is watching some movies or tv shows.
 
     @ManyToMany(mappedBy = "plansToWatch", fetch = FetchType.LAZY)
+    @JsonBackReference("users-plans-to-watch-ref")
     protected Set<User> usersPlanToWatch;
 
-    @ManyToMany(mappedBy = "haveWatched", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "hasWatched", fetch = FetchType.LAZY)
+    @JsonBackReference("users-watched-ref")
     protected Set<User> usersWatched;
 
     @ManyToMany(mappedBy = "isWatching", fetch = FetchType.LAZY)
+    @JsonBackReference("users-watching-ref")
     protected Set<User> usersWatching;
 
     @ManyToMany(mappedBy = "wontWatch", fetch = FetchType.LAZY)
+    @JsonBackReference("users-wont-watch-ref")
     protected Set<User> usersWontWatch;
 
     protected String imgPaths;
@@ -76,10 +80,18 @@ public class Filmwork {
         this.criticsScore = 0.f;
     }
 
-    public Filmwork(Long fid, String name, float audienceScore, float criticsScore, Set<Genre> genres,
-                    Set<Occupation> occupations, Set<Review> reviews) {
-        this.fid = fid;
+    public Filmwork(Long id, String name) {
+        this.id = id;
         this.name = name;
+        this.genres = Set.of();
+        this.occupations = Set.of();
+        this.criticsScore = 0.f;
+        this.reviews = Set.of();
+    }
+
+    public Filmwork(Long id, String name, float audienceScore, float criticsScore, Set<Genre> genres,
+                    Set<Occupation> occupations, Set<Review> reviews) {
+        this(id, name);
         this.audienceScore = audienceScore;
         this.criticsScore = criticsScore;
         this.genres = genres;
@@ -101,8 +113,8 @@ public class Filmwork {
         this.criticsScore = 0.f;
     }
 
-    public Filmwork(Long fid, String name, Set<Genre> genres) {
-        this.fid = fid;
+    public Filmwork(Long id, String name, Set<Genre> genres) {
+        this.id = id;
         this.name = name;
         this.genres = genres;
         this.criticsScore = 0.f;
@@ -113,12 +125,16 @@ public class Filmwork {
     }
 
     public float getAudienceScore() {
+
+        if (reviews == null || reviews.isEmpty()) return 0.f;
+
         List<Review> reviewList = new ArrayList<>(reviews);
         reviewList.sort(new SortByAudienceScore());
 
         float middleIndex = reviewList.size() / 2.f;
 
-        if ((reviewList.size() % 2) != 0) return reviewList.get((int) middleIndex).getScore();
+        if ((reviewList.size() % 2) != 0)
+            return reviewList.get((int) middleIndex).getScore();
 
         return (reviewList.get((int) middleIndex).getScore() + reviewList.get((int) middleIndex - 1).getScore()) / 2.f;
 
@@ -128,10 +144,20 @@ public class Filmwork {
         this.occupations = Occupation.of(this, map);
     }
 
+    public void addGenre(Genre genre) {
+        this.getGenres().add(genre);
+        genre.getFilmworks().add(this);
+    }
+
+    public void removeGenre(Genre genre) {
+        this.getGenres().remove(genre);
+        genre.getFilmworks().remove(this);
+    }
+
     @Override
     public String toString() {
         return "FilmWork{" +
-                "id=" + fid +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", audienceScore=" + audienceScore +
                 ", criticsScore=" + criticsScore +

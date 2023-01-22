@@ -26,21 +26,11 @@ public class Movie extends Filmwork {
         this.releaseDate = releaseDate;
     }
 
-    public Movie(String name, LocalDate releaseDate, Set<Genre> genres, Set<Occupation> occupations) {
-        super(name, genres, occupations);
-        this.releaseDate = releaseDate;
-    }
-
     public Movie() {}
 
-    public Movie(String name, Set<Genre> genres, Set<Occupation> occupations, LocalDate releaseDate) {
-        super(name, genres, occupations);
-        this.releaseDate = releaseDate;
-    }
-
-    public Movie(Long fid, String name, float audienceScore, float criticsScore, Set<Genre> genres,
+    public Movie(Long id, String name, float audienceScore, float criticsScore, Set<Genre> genres,
                  Set<Occupation> occupations, Set<Review> reviews, LocalDate releaseDate) {
-        super(fid, name, audienceScore, criticsScore, genres, occupations, reviews);
+        super(id, name, audienceScore, criticsScore, genres, occupations, reviews);
         this.releaseDate = releaseDate;
     }
 
@@ -48,7 +38,7 @@ public class Movie extends Filmwork {
     public String toString() {
         return "Movie{" +
                 "releaseDate=" + releaseDate +
-                ", fid=" + fid +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", audienceScore=" + audienceScore +
                 ", criticsScore=" + criticsScore +

@@ -1,9 +1,10 @@
 package cz.filmdb.service;
 
 import cz.filmdb.model.Person;
-import cz.filmdb.repo.MovieRepository;
 import cz.filmdb.repo.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,17 +14,15 @@ import java.util.Optional;
 public class PersonService {
 
     private final PersonRepository personRepository;
-    private final MovieRepository movieRepository;
 
     @Autowired
-    public PersonService(PersonRepository personRepository, MovieRepository movieRepository) {
+    public PersonService(PersonRepository personRepository) {
         this.personRepository = personRepository;
-        this.movieRepository = movieRepository;
     }
 
 
-    public List<Person> loadPeople() {
-        return personRepository.findAll();
+    public Page<Person> loadPeople(Pageable pageable) {
+        return personRepository.findAll(pageable);
     }
 
     public List<Person> findPeopleByName(String query) {
@@ -57,5 +56,9 @@ public class PersonService {
             return null;
 
         return personRepository.save(updatedPerson);
+    }
+
+    public void removePerson(Long id) {
+        personRepository.deleteById(id);
     }
 }
