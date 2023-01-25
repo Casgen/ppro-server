@@ -54,7 +54,7 @@ public class User implements UserDetails {
 
 
     // Users which will watch, wont watch, have watched or is watching some movies or tv shows.
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "plans_to_watch",
             joinColumns = {
                     @JoinColumn(name = "user_id"),
@@ -66,7 +66,7 @@ public class User implements UserDetails {
     @JsonManagedReference("users-plans-to-watch-ref")
     private Set<Filmwork> plansToWatch;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "is_watching",
             joinColumns = {
                     @JoinColumn(name = "user_id"),
@@ -78,7 +78,7 @@ public class User implements UserDetails {
     @JsonManagedReference("users-watching-ref")
     private Set<Filmwork> isWatching;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "wont_watch",
             joinColumns = {
                     @JoinColumn(name = "user_id"),
@@ -90,7 +90,7 @@ public class User implements UserDetails {
     @JsonManagedReference("users-wont-watch-ref")
     private Set<Filmwork> wontWatch;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "have_watched",
             joinColumns = {
                     @JoinColumn(name = "user_id"),
@@ -167,5 +167,47 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void addToPlansToWatch(Filmwork filmwork) {
+        this.plansToWatch.add(filmwork);
+        filmwork.getUsersPlanToWatch().add(this);
+    }
+
+    public void addToWontWatch(Filmwork filmwork) {
+        this.wontWatch.add(filmwork);
+        filmwork.getUsersWontWatch().add(this);
+    }
+
+    public void addToHasWatched(Filmwork filmwork) {
+        this.hasWatched.add(filmwork);
+        filmwork.getUsersHaveWatched().add(this);
+    }
+
+    public void addToWatching(Filmwork filmwork) {
+        this.isWatching.add(filmwork);
+        filmwork.getUsersWatching().add(this);
+    }
+
+
+
+    public void removeFromPlansToWatch(Filmwork filmwork) {
+        this.plansToWatch.remove(filmwork);
+        filmwork.getUsersPlanToWatch().remove(this);
+    }
+
+    public void removeFromWontWatch(Filmwork filmwork) {
+        this.wontWatch.remove(filmwork);
+        filmwork.getUsersWontWatch().remove(this);
+    }
+
+    public void removeFromHasWatched(Filmwork filmwork) {
+        this.hasWatched.remove(filmwork);
+        filmwork.getUsersHaveWatched().remove(this);
+    }
+
+    public void removeFromIsWatching(Filmwork filmwork) {
+        this.isWatching.remove(filmwork);
+        filmwork.getUsersWatching().remove(this);
     }
 }

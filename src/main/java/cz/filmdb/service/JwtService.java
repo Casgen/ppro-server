@@ -1,5 +1,6 @@
 package cz.filmdb.service;
 
+import cz.filmdb.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,6 +24,10 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("id")).toString();
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -32,6 +37,13 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
+    public String generateToken(UserDetails userDetails, Long usersId) {
+        Map<String, Object> extraClaims = new HashMap<>(1);
+        extraClaims.put("id", usersId);
+
+        return generateToken(extraClaims, userDetails);
+    }
+
     //Generates a token based on the fields and the Secret key
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
@@ -39,7 +51,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 3600))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS512)
                 .compact();
     }

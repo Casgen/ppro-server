@@ -27,7 +27,7 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
 
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user, user.getId());
 
         return AuthenticationResponse
                 .builder()
@@ -42,7 +42,7 @@ public class AuthenticationService {
         User user = userRepository.findByUsername(request.getUsername());
 
 
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user, user.getId());
 
         return AuthenticationResponse
                 .builder()
