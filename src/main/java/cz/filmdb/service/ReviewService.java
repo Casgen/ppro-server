@@ -24,6 +24,10 @@ public class ReviewService {
         return reviewRepository.findAllByUser(id);
     }
 
+    public Optional<Review> loadReviewById(Long id) {
+        return reviewRepository.findById(id);
+    }
+
     public Page<Review> loadReviewsByUser(Long id, Pageable pageable) {
         return reviewRepository.findAllByUser(id, pageable);
     }
