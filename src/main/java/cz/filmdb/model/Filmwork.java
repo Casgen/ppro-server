@@ -29,6 +29,8 @@ public class Filmwork {
     @Column(nullable = false)
     protected String name;
 
+    protected String description;
+
     @Transient
     protected transient float audienceScore;
 
@@ -55,19 +57,19 @@ public class Filmwork {
 
     // Users which will watch, wont watch, have watched or is watching some movies or tv shows.
 
-    @ManyToMany(mappedBy = "plansToWatch", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "plansToWatch", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonBackReference("users-plans-to-watch-ref")
     protected Set<User> usersPlanToWatch;
 
-    @ManyToMany(mappedBy = "hasWatched", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "hasWatched", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonBackReference("users-watched-ref")
-    protected Set<User> usersWatched;
+    protected Set<User> usersHaveWatched;
 
-    @ManyToMany(mappedBy = "isWatching", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "isWatching", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonBackReference("users-watching-ref")
     protected Set<User> usersWatching;
 
-    @ManyToMany(mappedBy = "wontWatch", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "wontWatch", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonBackReference("users-wont-watch-ref")
     protected Set<User> usersWontWatch;
 
@@ -154,6 +156,26 @@ public class Filmwork {
         genre.getFilmworks().remove(this);
     }
 
+    public void addToUsersPlanToWatch(User user) {
+        this.usersPlanToWatch.add(user);
+        user.getPlansToWatch().add(this);
+    }
+
+    public void addToUsersWontWatch(User user) {
+        this.usersWontWatch.add(user);
+        user.getWontWatch().add(this);
+    }
+
+    public void addToUsersHaveWatched(User user) {
+        this.usersHaveWatched.add(user);
+        user.getHasWatched().add(this);
+    }
+
+    public void addToUsersWatching(User user) {
+        this.usersWatching.add(user);
+        user.getIsWatching().add(this);
+    }
+
     @Override
     public String toString() {
         return "FilmWork{" +
@@ -164,6 +186,7 @@ public class Filmwork {
                 ", genres=" + genres +
                 '}';
     }
+
 }
 
 class SortByAudienceScore implements Comparator<Review> {
