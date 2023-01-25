@@ -11,7 +11,8 @@ import java.util.List;
 
 public interface MovieRepository extends JpaRepository<Movie,Long> {
 
-    Page<Movie> findAllByName(String name, Pageable pageable);
+    @Query("SELECT m FROM Movie m WHERE SOUNDEX(m.name) = SOUNDEX(:query)")
+    Page<Movie> findAllByNameContainingIgnoreCase(@Param("query") String query, Pageable pageable);
 
     Page<Movie> findAllByAudienceScoreGreaterThan(float score, Pageable pageable);
 

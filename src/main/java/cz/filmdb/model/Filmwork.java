@@ -14,6 +14,7 @@ import java.util.*;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "filmwork")
 public class Filmwork {
+
     @Id
     @SequenceGenerator(
             name = "filmwork_sequence",
@@ -73,7 +74,8 @@ public class Filmwork {
     @JsonBackReference("users-wont-watch-ref")
     protected Set<User> usersWontWatch;
 
-    protected String imgPaths;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    protected Set<FilmworkImage> imgPaths;
 
     public Filmwork(String name, Set<Genre> genres) {
         this.name = name;

@@ -28,6 +28,11 @@ public class PersonController {
         return personService.loadPerson(Long.parseLong(id));
     }
 
+    @GetMapping("/search")
+    public Page<Person> searchPeople(@RequestParam String query, Pageable pageable) {
+        return personService.searchPeopleByName(query, pageable);
+    }
+
     @PostMapping
     public Person createPerson(@RequestBody Person person) {
         return personService.savePerson(person);

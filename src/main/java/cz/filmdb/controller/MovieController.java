@@ -39,6 +39,11 @@ public class MovieController {
         return movieService.loadMoviesByGenres(genreIds, pageable);
     }
 
+    @GetMapping("/search")
+    public Page<Movie> searchMovies(@RequestParam String query, Pageable pageable) {
+        return movieService.searchMoviesByName(query, pageable);
+    }
+
     @PostMapping
     public Movie createMovie(@RequestBody Movie movie) {
         return movieService.saveMovie(movie);

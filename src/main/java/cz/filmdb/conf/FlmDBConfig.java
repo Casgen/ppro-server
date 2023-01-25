@@ -3,6 +3,7 @@ package cz.filmdb.conf;
 import cz.filmdb.enums.RoleType;
 import cz.filmdb.model.*;
 import cz.filmdb.repo.*;
+import cz.filmdb.service.AuthenticationService;
 import cz.filmdb.service.StorageService;
 import cz.filmdb.service.StorageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class FlmDBConfig {
     @Bean
     CommandLineRunner commandLineRunner(PersonRepository personRepository, OccupationRepository occupationRepository,
                                         UserRepository userRepository, ReviewRepository reviewRepository,
-                                        FilmWorkRepository filmworkRepository) {
+                                        FilmWorkRepository filmworkRepository, AuthenticationService authenticationService) {
         return args -> {
 
             List<Person> people = new ArrayList<>();
@@ -179,6 +180,8 @@ public class FlmDBConfig {
             reviews.add(new Review(basicJoe, avatar, "cringey.", 2.3f));
 
             reviewRepository.saveAll(reviews);
+
+            authenticationService.register(new RegisterRequest("admin","admin@gmail.com","password"), UserRole.ADMIN);
         };
     }
 

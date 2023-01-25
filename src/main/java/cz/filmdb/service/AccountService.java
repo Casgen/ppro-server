@@ -17,37 +17,49 @@ public class AccountService {
     private final FilmWorkRepository filmWorkRepository;
 
 
-    public User addToPlansToWatch(Long usersId, Long filmworkId) {
+    public User addToPlansToWatch(Long usersId, Long filmworkId) throws IllegalStateException {
 
         User user = getUserById(usersId);
         Filmwork filmwork = getFilmWorkById(filmworkId);
+
+        if (user.getPlansToWatch().contains(filmwork))
+            throw new IllegalStateException("Filmwork already has been added!");
 
         user.addToPlansToWatch(filmwork);
         return userRepository.save(user);
     }
 
-    public User addToIsWatching(Long usersId, Long filmworkId) {
+    public User addToIsWatching(Long usersId, Long filmworkId) throws IllegalStateException {
 
         User user = getUserById(usersId);
         Filmwork filmwork = getFilmWorkById(filmworkId);
+
+        if (user.getIsWatching().contains(filmwork))
+            throw new IllegalStateException("Filmwork already has been added!");
 
         user.addToWatching(filmwork);
         return userRepository.save(user);
     }
 
-    public User addToHasWatched(Long usersId, Long filmworkId) {
+    public User addToHasWatched(Long usersId, Long filmworkId) throws IllegalStateException {
 
         User user = getUserById(usersId);
         Filmwork filmwork = getFilmWorkById(filmworkId);
+
+        if (user.getHasWatched().contains(filmwork))
+            throw new IllegalStateException("Filmwork already has been added!");
 
         user.addToHasWatched(filmwork);
         return userRepository.save(user);
     }
 
-    public User addToWontWatch(Long usersId, Long filmworkId) {
+    public User addToWontWatch(Long usersId, Long filmworkId) throws IllegalStateException {
 
         User user = getUserById(usersId);
         Filmwork filmwork = getFilmWorkById(filmworkId);
+
+        if (user.getWontWatch().contains(filmwork))
+            throw new IllegalStateException("Filmwork already has been added!");
 
         user.addToWontWatch(filmwork);
         return userRepository.save(user);
@@ -55,37 +67,49 @@ public class AccountService {
 
     // ------------------------------------------------------------
 
-    public User removeFromWontWatch(Long usersId, Long filmworkId) {
+    public User removeFromWontWatch(Long usersId, Long filmworkId) throws NullPointerException {
 
         User user = getUserById(usersId);
         Filmwork filmwork = getFilmWorkById(filmworkId);
+
+        if (!user.getWontWatch().contains(filmwork))
+            throw new NullPointerException("Filmwork in the user's 'won't watch' list was not found!");
 
         user.removeFromWontWatch(filmwork);
         return userRepository.save(user);
     }
 
-    public User removeFromHasWatched(Long usersId, Long filmworkId) {
+    public User removeFromHasWatched(Long usersId, Long filmworkId) throws NullPointerException {
 
         User user = getUserById(usersId);
         Filmwork filmwork = getFilmWorkById(filmworkId);
+
+        if (!user.getHasWatched().contains(filmwork))
+            throw new NullPointerException("Filmwork in user's 'has watched' list was not found!");
 
         user.removeFromHasWatched(filmwork);
         return userRepository.save(user);
     }
 
-    public User removeFromIsWatching(Long usersId, Long filmworkId) {
+    public User removeFromIsWatching(Long usersId, Long filmworkId) throws NullPointerException {
 
         User user = getUserById(usersId);
         Filmwork filmwork = getFilmWorkById(filmworkId);
+
+        if (!user.getIsWatching().contains(filmwork))
+            throw new NullPointerException("Filmwork in user's 'is watching' list was not found!");
 
         user.removeFromIsWatching(filmwork);
         return userRepository.save(user);
     }
 
-    public User removeFromPlansToWatch(Long usersId, Long filmworkId) {
+    public User removeFromPlansToWatch(Long usersId, Long filmworkId) throws NullPointerException {
 
         User user = getUserById(usersId);
         Filmwork filmwork = getFilmWorkById(filmworkId);
+
+        if (!user.getPlansToWatch().contains(filmwork))
+            throw new NullPointerException("Filmwork was not found in the user's planned watchlist!");
 
         user.removeFromPlansToWatch(filmwork);
         return userRepository.save(user);

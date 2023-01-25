@@ -1,6 +1,7 @@
 package cz.filmdb.controller;
 
 import cz.filmdb.model.TVShow;
+import cz.filmdb.model.User;
 import cz.filmdb.service.TVShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,11 @@ public class TVShowController {
         Optional<TVShow> tvShow = tvShowService.loadTVShowById(Long.parseLong(id));
 
         return tvShow.orElse(null);
+    }
+
+    @GetMapping("/search")
+    public Page<TVShow> searchTvShows(@RequestParam String query, Pageable pageable) {
+        return tvShowService.searchByName(query, pageable);
     }
 
     @GetMapping("/by-genres")
