@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,13 +24,13 @@ public class PersonService {
         return personRepository.findAll(pageable);
     }
 
-    public List<Person> findPeopleByName(String query) {
-        String[] splitQuery = query.split(query);
+    public Page<Person> searchPeopleByName(String query, Pageable pageable) {
+        String[] splitQuery = query.split(" ");
 
         return switch (splitQuery.length) {
-            case 1 -> personRepository.findAllByName(splitQuery[0].trim());
-            case 2 -> personRepository.findAllByFirstNameOrLastName(splitQuery[0].trim(), splitQuery[1].trim());
-            default -> List.of();
+            case 1 -> personRepository.findAllByName(splitQuery[0].trim(), pageable);
+            case 2 -> personRepository.findAllByFirstNameOrLastName(splitQuery[0].trim(), splitQuery[1].trim(), pageable);
+            default -> Page.empty();
         };
     }
 
@@ -40,7 +39,6 @@ public class PersonService {
 
         if ((person = personRepository.findById(id)).isEmpty())
             return null;
-
 
         return person.get();
     }

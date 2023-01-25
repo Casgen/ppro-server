@@ -1,6 +1,7 @@
 package cz.filmdb.service;
 
 import cz.filmdb.model.TVShow;
+import cz.filmdb.model.User;
 import cz.filmdb.repo.TVShowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,5 +50,9 @@ public class TVShowService {
 
     public void removeTvShow(Long id) {
         tvShowRepository.deleteById(id);
+    }
+
+    public Page<TVShow> searchByName(String query, Pageable pageable) {
+        return tvShowRepository.findAllByNameContainingIgnoreCase(query, pageable);
     }
 }

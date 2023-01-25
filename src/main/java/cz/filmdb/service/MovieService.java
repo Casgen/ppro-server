@@ -25,6 +25,10 @@ public class MovieService {
         this.genreRepository = genreRepository;
     }
 
+    public Page<Movie> searchMoviesByName(String query, Pageable pageable) {
+        return movieRepository.findAllByNameContainingIgnoreCase(query, pageable);
+    }
+
     public Page<Movie> loadMovies(Pageable pageable) {
         return movieRepository.findAll(pageable);
     }

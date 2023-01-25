@@ -38,6 +38,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
+    public Page<User> searchByUsername(String query, Pageable pageable) {
+        return userRepository.findAllByUsernameContainingIgnoreCase(query, pageable);
+    }
+
     public User saveUser(User user) {
         return userRepository.save(user);
     }

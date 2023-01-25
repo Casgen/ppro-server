@@ -35,6 +35,11 @@ public class UserController {
         return userService.saveUser(user);
     }
 
+    @GetMapping("/search")
+    public Page<User> searchUsers(@RequestParam String query, Pageable pageable) {
+        return userService.searchByUsername(query, pageable);
+    }
+
     @PutMapping
     public ResponseEntity<String> putUser(@RequestBody User user) {
         User updatedUser = userService.updateUser(user);

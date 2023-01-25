@@ -16,4 +16,7 @@ public interface TVShowRepository extends JpaRepository<TVShow, Long> {
 
     @Query("SELECT DISTINCT tv FROM TVShow tv JOIN tv.genres genre JOIN genre.filmworks filmwork WHERE genre.id IN (:genreIds)")
     Page<TVShow> findAllByGenres(@Param("genreIds") List<Long> id, Pageable pageable);
+
+    @Query("SELECT show FROM TVShow show WHERE SOUNDEX(show.name) = SOUNDEX(:query)")
+    Page<TVShow> findAllByNameContainingIgnoreCase(@Param("query") String query, Pageable pageable);
 }
