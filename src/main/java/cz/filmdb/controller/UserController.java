@@ -1,5 +1,6 @@
 package cz.filmdb.controller;
 
+import cz.filmdb.model.Filmwork;
 import cz.filmdb.model.User;
 import cz.filmdb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class UserController {
         return userService.loadUserById(Long.parseLong(id)).orElse(null);
     }
 
+
     @PostMapping
     public User createUser(@RequestBody User user) {
         return userService.saveUser(user);
@@ -57,5 +59,18 @@ public class UserController {
         return ResponseEntity.ok().body("User was removed successfully.");
     }
 
-    // TODO: Add have watched, won't watch, is watching and plans to watch endpoints!
+    @GetMapping("/plans-to-watch/{id}")
+    public Page<Filmwork> getPlansToWatchList(@PathVariable Long id, Pageable pageable) {
+        return userService.loadPlansToWatchListByUserId(id, pageable);
+    }
+
+    @GetMapping("/is-watching/{id}")
+    public Page<Filmwork> getIsWatchingList(@PathVariable Long id, Pageable pageable) {
+        return userService.loadIsWatchingListByUserId(id, pageable);
+    }
+
+    @GetMapping("/has-watched/{id}")
+    public Page<Filmwork> getHasWatchedList(@PathVariable Long id, Pageable pageable) {
+        return userService.loadHasWatchedListByUserId(id, pageable);
+    }
 }

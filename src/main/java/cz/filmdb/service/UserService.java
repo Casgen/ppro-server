@@ -1,5 +1,6 @@
 package cz.filmdb.service;
 
+import cz.filmdb.model.Filmwork;
 import cz.filmdb.model.User;
 import cz.filmdb.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +82,17 @@ public class UserService implements UserDetailsService {
             throw new NullPointerException("User with the given id wasn't found!");
 
         userRepository.deleteById(id);
+    }
+
+    public Page<Filmwork> loadPlansToWatchListByUserId(Long id, Pageable pageable) {
+        return userRepository.findUsersPlansToWatchListById(id, pageable);
+    }
+
+    public Page<Filmwork> loadIsWatchingListByUserId(Long id, Pageable pageable) {
+        return userRepository.findUsersWatchingListById(id, pageable);
+    }
+
+    public Page<Filmwork> loadHasWatchedListByUserId(Long id, Pageable pageable) {
+        return userRepository.findUsersWatchingListById(id, pageable);
     }
 }
