@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -64,7 +65,7 @@ public class User implements UserDetails {
             }
     )
     @JsonManagedReference("users-plans-to-watch-ref")
-    private Set<Filmwork> plansToWatch;
+    private Set<Filmwork> plansToWatch = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "is_watching",
@@ -76,7 +77,7 @@ public class User implements UserDetails {
             }
     )
     @JsonManagedReference("users-watching-ref")
-    private Set<Filmwork> isWatching;
+    private Set<Filmwork> isWatching = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "wont_watch",
@@ -88,7 +89,7 @@ public class User implements UserDetails {
             }
     )
     @JsonManagedReference("users-wont-watch-ref")
-    private Set<Filmwork> wontWatch;
+    private Set<Filmwork> wontWatch = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "have_watched",
@@ -100,11 +101,11 @@ public class User implements UserDetails {
             }
     )
     @JsonManagedReference("users-watched-ref")
-    private Set<Filmwork> hasWatched;
+    private Set<Filmwork> hasWatched = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     @JsonManagedReference("users-reviews-ref")
-    public Set<Review> userReviews;
+    public Set<Review> userReviews = new HashSet<>();
 
 
     public User(Long id, String username, String email, String password) {
@@ -112,10 +113,10 @@ public class User implements UserDetails {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.userReviews = Set.of();
-        this.hasWatched = Set.of();
-        this.wontWatch = Set.of();
-        this.isWatching = Set.of();
+        this.userReviews = new HashSet<>();
+        this.hasWatched = new HashSet<>();
+        this.wontWatch = new HashSet<>();
+        this.isWatching = new HashSet<>();
     }
 
     public User(Long id, String username, String email, String password, UserRole userRole) {

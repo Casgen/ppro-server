@@ -80,17 +80,28 @@ public class Filmwork {
     public Filmwork(String name, Set<Genre> genres) {
         this.name = name;
         this.genres = genres;
-        this.occupations = Set.of();
         this.criticsScore = 0.f;
+        this.occupations = new HashSet<>();
+        this.reviews = new HashSet<>();
+
+        this.usersHaveWatched = new HashSet<>();
+        this.usersWatching = new HashSet<>();
+        this.usersWontWatch = new HashSet<>();
+        this.usersPlanToWatch = new HashSet<>();
     }
 
     public Filmwork(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.genres = Set.of();
-        this.occupations = Set.of();
+        this.genres = new HashSet<>();
+        this.occupations = new HashSet<>();
         this.criticsScore = 0.f;
-        this.reviews = Set.of();
+        this.reviews = new HashSet<>();
+
+        this.usersHaveWatched = new HashSet<>();
+        this.usersWatching = new HashSet<>();
+        this.usersWontWatch = new HashSet<>();
+        this.usersPlanToWatch = new HashSet<>();
     }
 
     public Filmwork(Long id, String name, float audienceScore, float criticsScore, Set<Genre> genres,
@@ -101,6 +112,11 @@ public class Filmwork {
         this.genres = genres;
         this.occupations = occupations;
         this.reviews = reviews;
+
+        this.usersHaveWatched = new HashSet<>();
+        this.usersWatching = new HashSet<>();
+        this.usersWontWatch = new HashSet<>();
+        this.usersPlanToWatch = new HashSet<>();
     }
 
     public Filmwork(String name, Set<Genre> genres, Set<Occupation> occupations) {
@@ -108,13 +124,23 @@ public class Filmwork {
         this.genres = genres;
         this.occupations = occupations;
         this.criticsScore = 0.f;
+
+        this.usersHaveWatched = new HashSet<>();
+        this.usersWatching = new HashSet<>();
+        this.usersWontWatch = new HashSet<>();
+        this.usersPlanToWatch = new HashSet<>();
     }
 
     public Filmwork(String name) {
         this.name = name;
-        this.genres = Set.of();
-        this.occupations = Set.of();
+        this.genres = new HashSet<>();
+        this.occupations = new HashSet<>();
         this.criticsScore = 0.f;
+
+        this.usersHaveWatched = new HashSet<>();
+        this.usersWatching = new HashSet<>();
+        this.usersWontWatch = new HashSet<>();
+        this.usersPlanToWatch = new HashSet<>();
     }
 
     public Filmwork(Long id, String name, Set<Genre> genres) {
@@ -122,10 +148,18 @@ public class Filmwork {
         this.name = name;
         this.genres = genres;
         this.criticsScore = 0.f;
+
+        this.usersHaveWatched = new HashSet<>();
+        this.usersWatching = new HashSet<>();
+        this.usersWontWatch = new HashSet<>();
+        this.usersPlanToWatch = new HashSet<>();
     }
 
     public Filmwork() {
-
+        this.usersHaveWatched = new HashSet<>();
+        this.usersWatching = new HashSet<>();
+        this.usersWontWatch = new HashSet<>();
+        this.usersPlanToWatch = new HashSet<>();
     }
 
     public float getAudienceScore() {

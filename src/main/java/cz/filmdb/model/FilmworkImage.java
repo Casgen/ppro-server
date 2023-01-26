@@ -29,4 +29,9 @@ public class FilmworkImage {
 
     private String img;
 
+    public FilmworkImage(boolean isTitle, String img) {
+        this.isTitle = isTitle;
+        this.img = img;
+    }
+
 }

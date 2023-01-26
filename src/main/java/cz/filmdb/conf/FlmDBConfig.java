@@ -67,16 +67,6 @@ public class FlmDBConfig {
             Person johnKrasinski = new Person("John", "Krasinski");
 
 
-            List<User> users = new ArrayList<>();
-
-            User basicJoe = new User("basicjoe231", "basic.joe@gmail.com", "123456", UserRole.USER);
-            User mckinsley = new User("mckinsley", "mckinsley87@gmail.com", "123456", UserRole.USER);
-            User elenorRigby = new User("elenorRigby", "elenor.Rigby@gmail.com", "3890jdfhs", UserRole.USER);
-
-            users.add(basicJoe);
-            users.add(mckinsley);
-            users.add(elenorRigby);
-            userRepository.saveAll(users);
 
             people.add(ridleyScott);
             people.add(sigourneyWeaver);
@@ -119,7 +109,6 @@ public class FlmDBConfig {
             //genreRepository.saveAll(List.of(horror,action,crime,drama,scifi));
 
 
-
             // Movies
             Filmwork alien = new Movie("Alien", LocalDate.of(1979,3,13), Set.of(scifi, horror));
             Filmwork killBill = new Movie("Kill Bill Vol. 1", LocalDate.of(2003, 9, 29), Set.of(action,crime,drama));
@@ -128,7 +117,30 @@ public class FlmDBConfig {
             // TVShows
             Filmwork theOffice = new TVShow("The Office", LocalDate.of(2005, 3, 16),LocalDate.of(2013, 5, 16), Set.of(comedy, mockumentary), 9);
 
-            filmworkRepository.saveAll(List.of(alien,killBill,avatar, theOffice));
+            // FILMWORKS ARE PERSISTED THROUGH THE USERS!
+
+            List<User> users = new ArrayList<>();
+
+            User basicJoe = new User("basicjoe231", "basic.joe@gmail.com", "123456", UserRole.USER);
+            User mckinsley = new User("mckinsley", "mckinsley87@gmail.com", "123456", UserRole.USER);
+            User elenorRigby = new User("elenorRigby", "elenor.Rigby@gmail.com", "3890jdfhs", UserRole.USER);
+
+            basicJoe.addToPlansToWatch(killBill);
+            basicJoe.addToHasWatched(alien);
+            basicJoe.addToHasWatched(avatar);
+
+            mckinsley.addToPlansToWatch(theOffice);
+            mckinsley.addToPlansToWatch(alien);
+            mckinsley.addToWatching(theOffice);
+
+            elenorRigby.addToWatching(avatar);
+            elenorRigby.addToHasWatched(killBill);
+
+            users.add(basicJoe);
+            users.add(mckinsley);
+            users.add(elenorRigby);
+
+            userRepository.saveAll(users);
 
             //Filmwork occupations
             Map<Person, List<RoleType>> alienOccupations = new HashMap<>();
