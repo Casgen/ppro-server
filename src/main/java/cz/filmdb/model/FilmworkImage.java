@@ -33,4 +33,5 @@ public class FilmworkImage {
         this.isTitle = isTitle;
         this.img = img;
     }
+
 }
