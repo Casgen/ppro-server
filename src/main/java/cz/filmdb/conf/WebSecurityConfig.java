@@ -96,7 +96,7 @@ public class WebSecurityConfig {
     }*/
 
 
-    /*@Bean
+    @Bean
     @Order(1)
     public SecurityFilterChain filterChainMovie(HttpSecurity http) throws Exception {
         http.csrf()
@@ -154,29 +154,6 @@ public class WebSecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
-    }*/
-
-    @Bean
-    public SecurityFilterChain filterChainPublic(HttpSecurity http) throws Exception {
-        // This option defines if the request can be sent from a different form than its origin.
-        // It enables us to use Postman without errors.
-        http.csrf()
-                .disable()
-                .securityMatcher("/api/v1/**")
-                .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST).permitAll()
-                .requestMatchers(HttpMethod.DELETE).permitAll()
-                .requestMatchers(HttpMethod.GET).permitAll()
-                .requestMatchers(HttpMethod.PUT).permitAll()
-                .and()
-                //We have to provide the authentication for every separate filter chain!
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
     }
 
 
-}
