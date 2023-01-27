@@ -45,7 +45,16 @@ public class TVShow extends Filmwork {
 
     public TVShow(Long id, String name, float audienceScore, float criticsScore, Set<Genre> genres,
                   Set<Occupation> occupations, Set<Review> reviews, int numberOfSeasons, LocalDate runningFrom, LocalDate runningTo) {
-        super(id, name,audienceScore, criticsScore, genres,occupations,reviews);
+        super(id, name,audienceScore, criticsScore, genres,occupations,reviews, null);
+        this.runningTo = runningTo;
+        this.runningFrom = runningFrom;
+        this.numberOfSeasons = numberOfSeasons;
+    }
+
+    public TVShow(Long id, String name, float audienceScore, float criticsScore, Set<Genre> genres,
+                  Set<Occupation> occupations, Set<Review> reviews, int numberOfSeasons, LocalDate runningFrom,
+                  LocalDate runningTo, Set<FilmworkImage> images) {
+        super(id, name,audienceScore, criticsScore, genres,occupations,reviews, images);
         this.runningTo = runningTo;
         this.runningFrom = runningFrom;
         this.numberOfSeasons = numberOfSeasons;

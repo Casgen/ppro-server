@@ -104,8 +104,15 @@ public class Filmwork {
         this.usersPlanToWatch = new HashSet<>();
     }
 
+    private void initWatchLists() {
+        this.usersHaveWatched = new HashSet<>();
+        this.usersWatching = new HashSet<>();
+        this.usersWontWatch = new HashSet<>();
+        this.usersPlanToWatch = new HashSet<>();
+    }
+
     public Filmwork(Long id, String name, float audienceScore, float criticsScore, Set<Genre> genres,
-                    Set<Occupation> occupations, Set<Review> reviews) {
+                    Set<Occupation> occupations, Set<Review> reviews, Set<FilmworkImage> images) {
         this(id, name);
         this.audienceScore = audienceScore;
         this.criticsScore = criticsScore;
@@ -113,10 +120,9 @@ public class Filmwork {
         this.occupations = occupations;
         this.reviews = reviews;
 
-        this.usersHaveWatched = new HashSet<>();
-        this.usersWatching = new HashSet<>();
-        this.usersWontWatch = new HashSet<>();
-        this.usersPlanToWatch = new HashSet<>();
+        this.imgPaths = images;
+
+        initWatchLists();
     }
 
     public Filmwork(String name, Set<Genre> genres, Set<Occupation> occupations) {
@@ -125,10 +131,7 @@ public class Filmwork {
         this.occupations = occupations;
         this.criticsScore = 0.f;
 
-        this.usersHaveWatched = new HashSet<>();
-        this.usersWatching = new HashSet<>();
-        this.usersWontWatch = new HashSet<>();
-        this.usersPlanToWatch = new HashSet<>();
+        initWatchLists();
     }
 
     public Filmwork(String name) {
@@ -137,8 +140,7 @@ public class Filmwork {
         this.occupations = new HashSet<>();
         this.criticsScore = 0.f;
 
-        this.usersHaveWatched = new HashSet<>();
-        this.usersWatching = new HashSet<>();
+        this.usersHaveWatched = new HashSet<>(); this.usersWatching = new HashSet<>();
         this.usersWontWatch = new HashSet<>();
         this.usersPlanToWatch = new HashSet<>();
     }
@@ -160,6 +162,25 @@ public class Filmwork {
         this.usersWatching = new HashSet<>();
         this.usersWontWatch = new HashSet<>();
         this.usersPlanToWatch = new HashSet<>();
+    }
+
+    public Filmwork(Long id, String name, float audienceScore, float criticsScore,
+                    Set<Genre> genres, Set<Occupation> occupations, Set<Review> reviews) {
+
+        this(id, name);
+        this.audienceScore = audienceScore;
+        this.criticsScore = criticsScore;
+        this.genres = genres;
+        this.occupations = occupations;
+        this.reviews = reviews;
+
+        this.imgPaths = new HashSet<>();
+
+        this.usersHaveWatched = new HashSet<>();
+        this.usersWatching = new HashSet<>();
+        this.usersWontWatch = new HashSet<>();
+        this.usersPlanToWatch = new HashSet<>();
+
     }
 
     public float getAudienceScore() {
@@ -210,6 +231,10 @@ public class Filmwork {
     public void addToUsersWatching(User user) {
         this.usersWatching.add(user);
         user.getIsWatching().add(this);
+    }
+
+    public void addImg(FilmworkImage image) {
+        this.imgPaths.add(image);
     }
 
     @Override
