@@ -24,4 +24,10 @@ public interface StorageService {
 
     void deleteAll();
 
+    void delete(String filename, Path path);
+
+    void delete(Path pathToFile);
+
+    void move(Path source, Path dst);
+
 }

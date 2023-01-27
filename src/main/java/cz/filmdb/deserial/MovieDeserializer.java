@@ -40,8 +40,34 @@ public class MovieDeserializer extends StdDeserializer<Movie> {
         Set<Genre> genres = getGenres(rootNode);
         Set<Occupation> occupations = getOccupations(rootNode);
         Set<Review> reviews = getReviews(rootNode);
+        Set<FilmworkImage> images = getImages(rootNode);
 
-        return new Movie(id,name,audienceScore,criticsScore,genres,occupations,reviews,releaseDate);
+        return new Movie(id,name,audienceScore,criticsScore,genres,occupations,reviews,releaseDate, images);
+    }
+
+    private Set<FilmworkImage> getImages(JsonNode rootNode) {
+        if (!rootNode.has("imgPaths"))
+            return Set.of();
+
+        JsonNode imgsSetNode = rootNode.get("imgPaths");
+
+        Set<FilmworkImage> images = new HashSet<>();
+
+        Long id;
+        String path;
+        boolean isTitle;
+
+        for (JsonNode imgNode : imgsSetNode) {
+
+            id = imgNode.get("id").asLong();
+            path = imgNode.get("img").asText();
+            isTitle = imgNode.has("isTitle") ? imgNode.get("isTitle").asBoolean() : false;
+
+            images.add(new FilmworkImage(id, isTitle, path));
+
+        }
+
+        return images;
     }
 
     private Set<Genre> getGenres(JsonNode rootNode) {

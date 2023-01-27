@@ -35,6 +35,7 @@ public class UserDeserializer extends StdDeserializer<User> {
         UserRole role = rootNode.has("role") ? UserRole.valueOf(rootNode.get("role").asText()) : null;
         String password = rootNode.has("password") ? rootNode.get("password").asText() : null;
         String username = rootNode.get("username").asText();
+        String profileImg = rootNode.has("profileImg") ? rootNode.get("profileImg").asText() : null;
 
         Set<Review> reviews = getReviews(rootNode);
 
@@ -43,7 +44,7 @@ public class UserDeserializer extends StdDeserializer<User> {
         Set<Filmwork> wontWatch = getWatch(rootNode, "wontWatch");
         Set<Filmwork> hasWatched = getWatch(rootNode, "hasWatched");
 
-        return new User(id,email,username,password, role, plansToWatch, isWatching, wontWatch, hasWatched, reviews);
+        return new User(id,email,username,password, role, plansToWatch, isWatching, wontWatch, hasWatched, reviews, profileImg);
     }
 
     private Set<Review> getReviews(JsonNode rootNode) {

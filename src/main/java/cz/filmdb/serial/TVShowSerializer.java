@@ -31,7 +31,6 @@ public class TVShowSerializer extends StdSerializer<TVShow> {
         if (tvShow.getRunningTo() != null)
             jsonGenerator.writeStringField("runningTo",tvShow.getRunningTo().toString());
 
-
         // Genres
         {
             jsonGenerator.writeArrayFieldStart("genres");
@@ -44,6 +43,21 @@ public class TVShowSerializer extends StdSerializer<TVShow> {
             }
 
             jsonGenerator.writeEndArray();
+        }
+
+        {
+            jsonGenerator.writeArrayFieldStart("imgPaths");
+
+            for (FilmworkImage image : tvShow.getImgPaths()) {
+                jsonGenerator.writeStartObject();
+                jsonGenerator.writeNumberField("id", image.getId());
+                jsonGenerator.writeBooleanField("isTitle", image.isTitle());
+                jsonGenerator.writeStringField("img", image.getImg());
+                jsonGenerator.writeEndObject();
+            }
+
+            jsonGenerator.writeEndArray();
+
         }
 
         // Occupations

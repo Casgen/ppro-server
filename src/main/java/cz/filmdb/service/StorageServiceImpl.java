@@ -17,7 +17,7 @@ public class StorageServiceImpl implements StorageService {
 
     private final Path rootDir = Paths.get("files");
     private final Path imgsDir = rootDir.resolve("imgs");
-    private final Path usrImgsDir = imgsDir.resolve("user");
+    private final Path usrImgsDir = imgsDir.resolve("usr");
     private final Path filmworkImgsDir = imgsDir.resolve("filmwork");
 
     @Override
@@ -115,5 +115,47 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(rootDir.toFile());
+    }
+
+    @Override
+    public void delete(String filename, Path path) {
+        try {
+            Path file = path != null ? path.resolve(filename) : this.rootDir.resolve(filename);
+
+
+            if (!Files.isReadable(path) && !Files.exists(path))
+                throw new RuntimeException("Could not delete the file!");
+
+            Files.delete(file);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void delete(Path pathToFile) {
+        try {
+
+            if (!Files.isReadable(pathToFile) && !Files.exists(pathToFile))
+                throw new RuntimeException("Could not delete the file!");
+
+            Files.delete(pathToFile);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void move(Path source, Path dst) {
+        try {
+
+            Files.move(source, dst);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
