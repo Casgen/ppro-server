@@ -20,16 +20,20 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
-    public List<Review> loadReviewsByUser(Long id) {
-        return reviewRepository.findAllByUser(id);
-    }
-
     public Optional<Review> loadReviewById(Long id) {
         return reviewRepository.findById(id);
     }
 
     public Page<Review> loadReviewsByUser(Long id, Pageable pageable) {
         return reviewRepository.findAllByUser(id, pageable);
+    }
+
+    public Optional<Review> loadReviewByUserAndFilmwork(Long usersId, Long filmworkId) {
+        return reviewRepository.findByUserIdAndFilmworkId(usersId, filmworkId);
+    }
+
+    public boolean isExistingByUserIdAndFilmworkId(Long usersId, Long filmworkId) {
+        return loadReviewByUserAndFilmwork(usersId, filmworkId).isPresent();
     }
 
     public Page<Review> loadReviewsByFilmwork(Long id, Pageable pageable) {

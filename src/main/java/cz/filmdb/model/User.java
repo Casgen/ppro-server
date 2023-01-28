@@ -137,6 +137,10 @@ public class User implements UserDetails {
         this(id, username, null, null, null);
     }
 
+    public User(Long userId) {
+        this.id = userId;
+    }
+
     @Override
     public String toString() {
         return "User{" +

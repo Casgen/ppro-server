@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -42,7 +43,7 @@ public class Review {
     @JoinColumn(name = "filmwork_id")
     private Filmwork filmwork;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     private LocalDateTime date;
 
     private String comment;
