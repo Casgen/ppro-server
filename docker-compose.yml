@@ -22,5 +22,5 @@ services:
         "spring.datasource.url"  : "jdbc:mariadb://mariadb:3306/film_db",
         "spring.datasource.username" : "root",
         "spring.datasource.password" : "rootpassword",
-        "spring.jpa.hibernate.ddl-auto" : "update"
+        "spring.jpa.hibernate.ddl-auto" : "create-drop"
       }'
