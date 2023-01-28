@@ -57,7 +57,7 @@ class MovieControllerTest {
     @Test
     public void getMovie() throws Exception {
 
-        RequestBuilder req = MockMvcRequestBuilders.get(apiUrl.concat("1"));
+        RequestBuilder req = MockMvcRequestBuilders.get(apiUrl.concat("/1"));
 
         mvc.perform(req).andExpect(status().isOk());
     }

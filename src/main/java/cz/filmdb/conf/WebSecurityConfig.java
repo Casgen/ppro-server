@@ -99,6 +99,7 @@ public class WebSecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain filterChainMovie(HttpSecurity http) throws Exception {
+        http.cors();
         http.csrf()
                 .disable()
                 .securityMatcher("/api/v1/movies/**",
@@ -127,6 +128,7 @@ public class WebSecurityConfig {
     @Bean
     @Order(2)
     public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
+        http.cors();
         http.csrf()
                 .disable()
                 .securityMatcher("/api/v1/auth/**")
@@ -140,6 +142,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChainPerson(HttpSecurity http) throws Exception {
         // This option defines if the request can be sent from a different form than its origin.
         // It enables us to use Postman without errors.
+        http.cors();
         http.csrf()
                 .disable()
                 .securityMatcher("/api/v1/account/**")
@@ -155,5 +158,5 @@ public class WebSecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
+}
 

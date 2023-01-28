@@ -43,7 +43,7 @@ class AuthenticationControllerTest {
         RegisterRequest newUser = new RegisterRequest("username", "user@gmail.com", "123456789");
         String newUserJson = jsonRegisterReq.write(newUser).getJson();
 
-        RequestBuilder req = MockMvcRequestBuilders.post(apiUrl.concat("register"))
+        RequestBuilder req = MockMvcRequestBuilders.post(apiUrl.concat("/register"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(newUserJson);
 
