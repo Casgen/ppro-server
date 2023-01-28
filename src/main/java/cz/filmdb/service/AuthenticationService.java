@@ -27,7 +27,7 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
 
-        String jwtToken = jwtService.generateToken(user, user.getId());
+        String jwtToken = jwtService.generateToken(user, user.getId(), user.getUserRole());
 
         return AuthenticationResponse
                 .builder()
@@ -44,7 +44,7 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
 
-        String jwtToken = jwtService.generateToken(user, user.getId());
+        String jwtToken = jwtService.generateToken(user, user.getId(), user.getUserRole());
 
         return AuthenticationResponse
                 .builder()
@@ -58,8 +58,7 @@ public class AuthenticationService {
         // TODO: Handle the exception
         User user = userRepository.findByUsername(request.getUsername());
 
-
-        String jwtToken = jwtService.generateToken(user, user.getId());
+        String jwtToken = jwtService.generateToken(user, user.getId(), user.getUserRole());
 
         return AuthenticationResponse
                 .builder()

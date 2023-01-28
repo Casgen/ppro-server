@@ -1,6 +1,7 @@
 package cz.filmdb.service;
 
 import cz.filmdb.model.User;
+import cz.filmdb.model.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -37,9 +38,10 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    public String generateToken(UserDetails userDetails, Long usersId) {
+    public String generateToken(UserDetails userDetails, Long usersId, UserRole role) {
         Map<String, Object> extraClaims = new HashMap<>(1);
         extraClaims.put("id", usersId);
+        extraClaims.put("role", role.name());
 
         return generateToken(extraClaims, userDetails);
     }
