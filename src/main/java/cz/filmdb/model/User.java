@@ -105,7 +105,9 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     @JsonManagedReference("users-reviews-ref")
-    public Set<Review> userReviews = new HashSet<>();
+    private Set<Review> userReviews;
+
+    private String profileImg;
 
 
     public User(Long id, String username, String email, String password) {

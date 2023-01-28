@@ -40,6 +40,18 @@ public class MovieSerializer extends StdSerializer<Movie> {
 
             jsonGenerator.writeEndArray();
 
+            jsonGenerator.writeArrayFieldStart("imgPaths");
+
+            for (FilmworkImage image : movie.getImgPaths()) {
+                jsonGenerator.writeStartObject();
+                jsonGenerator.writeNumberField("id", image.getId());
+                jsonGenerator.writeBooleanField("isTitle", image.isTitle());
+                jsonGenerator.writeStringField("img", image.getImg());
+                jsonGenerator.writeEndObject();
+            }
+
+            jsonGenerator.writeEndArray();
+
             // Occupations
             jsonGenerator.writeArrayFieldStart("occupations");
 

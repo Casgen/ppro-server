@@ -29,8 +29,8 @@ public class Movie extends Filmwork {
     public Movie() {}
 
     public Movie(Long id, String name, float audienceScore, float criticsScore, Set<Genre> genres,
-                 Set<Occupation> occupations, Set<Review> reviews, LocalDate releaseDate) {
-        super(id, name, audienceScore, criticsScore, genres, occupations, reviews);
+                 Set<Occupation> occupations, Set<Review> reviews, LocalDate releaseDate, Set<FilmworkImage> filmworkImages) {
+        super(id, name, audienceScore, criticsScore, genres, occupations, reviews,filmworkImages);
         this.releaseDate = releaseDate;
     }
 

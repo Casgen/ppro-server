@@ -11,19 +11,30 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final StorageService storageService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, StorageService storageService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.storageService = storageService;
     }
 
     public Page<User> loadUsers(Pageable pageable) {
@@ -32,6 +43,38 @@ public class UserService implements UserDetailsService {
 
     public Optional<User> loadUserById(Long id) {
         return userRepository.findById(id);
+    }
+
+    public void addOrUpdateImgFile(Long usersId, MultipartFile file) {
+
+        try {
+
+            Optional<User> optUser = userRepository.findById(usersId);
+
+            if (optUser.isEmpty()) throw new NullPointerException("User was not found!");
+
+            User user = optUser.get();
+            Path path = Paths.get("files","imgs", "usr");
+
+            if (user.getProfileImg() != null)
+                storageService.delete(Paths.get(user.getProfileImg()));
+
+            storageService.store(file, path);
+
+            Path src = path.resolve(file.getOriginalFilename());
+
+            Path dst = path.resolve(String.format("%s-%d", LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(), user.getId()));
+
+            // This renames the given file to a unique identifier
+            storageService.move(src, dst);
+
+            user.setProfileImg(dst.toString());
+            userRepository.save(user);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
