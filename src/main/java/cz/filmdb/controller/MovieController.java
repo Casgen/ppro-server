@@ -3,10 +3,13 @@ package cz.filmdb.controller;
 import cz.filmdb.model.Movie;
 import cz.filmdb.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -51,7 +54,11 @@ public class MovieController {
 
     @PutMapping
     public Movie putMovie(@RequestBody Movie movie) {
-        return movieService.updateMovie(movie);
+        try {
+            return movieService.updateMovie(movie);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Given movie was not found!");
+        }
     }
 
     @DeleteMapping("/{id}")

@@ -44,7 +44,7 @@ public class UserDeserializer extends StdDeserializer<User> {
         Set<Filmwork> wontWatch = getWatch(rootNode, "wontWatch");
         Set<Filmwork> hasWatched = getWatch(rootNode, "hasWatched");
 
-        return new User(id,email,username,password, role, plansToWatch, isWatching, wontWatch, hasWatched, reviews, profileImg);
+        return new User(id,username,email,password, role, plansToWatch, isWatching, wontWatch, hasWatched, reviews, profileImg);
     }
 
     private Set<Review> getReviews(JsonNode rootNode) {

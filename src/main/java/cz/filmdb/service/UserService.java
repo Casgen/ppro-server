@@ -4,6 +4,7 @@ import cz.filmdb.model.Filmwork;
 import cz.filmdb.model.User;
 import cz.filmdb.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -90,29 +91,27 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User updateUser(User updatedUser) {
-        Optional<User> oldUser = userRepository.findById(updatedUser.getId());
-
-        if (oldUser.isEmpty())
-            return null;
+    public User updateUser(User updatedUser) throws ChangeSetPersister.NotFoundException {
+        User oldUser = userRepository.findById(updatedUser.getId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         if (updatedUser.getUserRole() == null)
-            updatedUser.setUserRole(oldUser.get().getUserRole());
+            updatedUser.setUserRole(oldUser.getUserRole());
 
         if (updatedUser.getPassword() != null) {
 
             String updatedPassword = passwordEncoder.encode(updatedUser.getPassword());
 
-            if (!oldUser.get().getPassword().equals(updatedPassword)) {
+            if (!oldUser.getPassword().equals(updatedPassword)) {
                 updatedUser.setPassword(updatedPassword);
             } else {
-                updatedUser.setPassword(oldUser.get().getPassword());
+                updatedUser.setPassword(oldUser.getPassword());
             }
 
             return userRepository.save(updatedUser);
         }
 
-        updatedUser.setPassword(oldUser.get().getPassword());
+        updatedUser.setEmail(oldUser.getEmail());
+        updatedUser.setPassword(oldUser.getPassword());
 
         return userRepository.save(updatedUser);
     }

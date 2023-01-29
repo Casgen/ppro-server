@@ -203,6 +203,7 @@ public class Filmwork {
         this.occupations = Occupation.of(this, map);
     }
 
+
     public void addGenre(Genre genre) {
         this.getGenres().add(genre);
         genre.getFilmworks().add(this);
@@ -248,6 +249,9 @@ public class Filmwork {
                 '}';
     }
 
+    public void setOccupations(Set<Occupation> occupations) {
+        this.occupations = occupations;
+    }
 }
 
 class SortByAudienceScore implements Comparator<Review> {

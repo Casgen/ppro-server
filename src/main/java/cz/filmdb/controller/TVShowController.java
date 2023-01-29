@@ -4,10 +4,13 @@ import cz.filmdb.model.TVShow;
 import cz.filmdb.model.User;
 import cz.filmdb.service.TVShowService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +57,11 @@ public class TVShowController {
 
     @PutMapping
     public TVShow putTvShow(@RequestBody TVShow tvShow) {
-        return tvShowService.updateTvShow(tvShow);
+        try {
+            return tvShowService.updateTvShow(tvShow);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Given TV show was not found!");
+        }
     }
 
     @DeleteMapping("/{id}")
