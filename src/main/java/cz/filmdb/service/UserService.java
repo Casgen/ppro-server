@@ -135,6 +135,6 @@ public class UserService implements UserDetailsService {
     }
 
     public Page<Filmwork> loadHasWatchedListByUserId(Long id, Pageable pageable) {
-        return userRepository.findUsersWatchingListById(id, pageable);
+        return userRepository.findUsersHasWatchedListById(id, pageable);
     }
 }
