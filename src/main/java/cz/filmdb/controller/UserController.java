@@ -2,12 +2,16 @@ package cz.filmdb.controller;
 
 import cz.filmdb.model.Filmwork;
 import cz.filmdb.model.User;
+import cz.filmdb.service.JwtService;
 import cz.filmdb.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -17,9 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final JwtService jwtService;
+
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtService jwtService) {
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping
@@ -44,17 +51,23 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<String> putUser(@RequestBody User user) {
+    public ResponseEntity<String> putUser(@RequestBody User user, HttpServletRequest request) {
         try {
+            Long userId = Long.valueOf(jwtService.extractUserId(retrieveToken(request)));
+
+            User foundUser = userService.loadUserById(userId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+            if (foundUser.getId() != user.getId())
+                throw new AuthorizationServiceException("User id's do not match! edit not authorized!");
+
             userService.updateUser(user);
 
             return ResponseEntity.ok().body("User was updated successfully.");
         } catch (ChangeSetPersister.NotFoundException e) {
-
-            return ResponseEntity.status(503).body("Error occured while updating the user!");
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(String.format("Error occured while updating the user! %s", e.getMessage()));
+        } catch (AuthorizationServiceException e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(String.format("Error occured while updating the user! %s", e.getMessage()));
         }
-
-
     }
 
     @DeleteMapping("/{id}")
@@ -77,5 +90,9 @@ public class UserController {
     @GetMapping("/has-watched/{id}")
     public Page<Filmwork> getHasWatchedList(@PathVariable Long id, Pageable pageable) {
         return userService.loadHasWatchedListByUserId(id, pageable);
+    }
+
+    private String retrieveToken(HttpServletRequest request) {
+        return request.getHeader("Authorization").substring(7);
     }
 }

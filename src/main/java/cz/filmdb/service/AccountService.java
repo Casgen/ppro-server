@@ -25,6 +25,9 @@ public class AccountService {
         if (user.getPlansToWatch().contains(filmwork))
             throw new IllegalStateException("Filmwork already has been added!");
 
+        user.getHasWatched().removeIf(item -> item.getId() == filmworkId);
+        user.getIsWatching().removeIf(item -> item.getId() == filmworkId);
+
         user.addToPlansToWatch(filmwork);
         return userRepository.save(user);
     }
@@ -37,6 +40,9 @@ public class AccountService {
         if (user.getIsWatching().contains(filmwork))
             throw new IllegalStateException("Filmwork already has been added!");
 
+        user.getHasWatched().removeIf(item -> item.getId() == filmworkId);
+        user.getPlansToWatch().removeIf(item -> item.getId() == filmworkId);
+
         user.addToWatching(filmwork);
         return userRepository.save(user);
     }
@@ -48,6 +54,10 @@ public class AccountService {
 
         if (user.getHasWatched().contains(filmwork))
             throw new IllegalStateException("Filmwork already has been added!");
+
+        user.getIsWatching().removeIf(item -> item.getId() == filmworkId);
+        user.getPlansToWatch().removeIf(item -> item.getId() == filmworkId);
+
 
         user.addToHasWatched(filmwork);
         return userRepository.save(user);
