@@ -4,6 +4,7 @@ import cz.filmdb.model.TVShow;
 import cz.filmdb.model.User;
 import cz.filmdb.repo.TVShowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,12 +39,14 @@ public class TVShowService {
         return tvShowRepository.save(tvShow);
     }
 
-    public TVShow updateTvShow(TVShow updatedTvShow) {
+    public TVShow updateTvShow(TVShow updatedTvShow) throws ChangeSetPersister.NotFoundException {
 
-        Optional<TVShow> oldTvShow = tvShowRepository.findById(updatedTvShow.getId());
+        TVShow oldTvShow = tvShowRepository.findById(updatedTvShow.getId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        if (oldTvShow.isEmpty())
-            throw new NullPointerException("TVShow with a given id wasn't found!");
+        updatedTvShow.setGenres(oldTvShow.getGenres());
+        updatedTvShow.setReviews(oldTvShow.getReviews());
+        updatedTvShow.setOccupations(oldTvShow.getOccupations());
+        updatedTvShow.setImgPaths(oldTvShow.getImgPaths());
 
         return tvShowRepository.save(updatedTvShow);
     }

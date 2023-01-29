@@ -5,6 +5,7 @@ import cz.filmdb.model.Movie;
 import cz.filmdb.repo.GenreRepository;
 import cz.filmdb.repo.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,11 +46,13 @@ public class MovieService {
         return movieRepository.save(movie);
     }
 
-    public Movie updateMovie(Movie updatedMovie) {
-        Optional<Movie> oldReview = movieRepository.findById(updatedMovie.getId());
+    public Movie updateMovie(Movie updatedMovie) throws ChangeSetPersister.NotFoundException {
+        Movie oldMovie = movieRepository.findById(updatedMovie.getId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        if (oldReview.isEmpty())
-            return null;
+        updatedMovie.setGenres(oldMovie.getGenres());
+        updatedMovie.setReviews(oldMovie.getReviews());
+        updatedMovie.setOccupations(oldMovie.getOccupations());
+        updatedMovie.setImgPaths(oldMovie.getImgPaths());
 
         return movieRepository.save(updatedMovie);
     }

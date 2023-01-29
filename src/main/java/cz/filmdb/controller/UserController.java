@@ -4,6 +4,7 @@ import cz.filmdb.model.Filmwork;
 import cz.filmdb.model.User;
 import cz.filmdb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -44,12 +45,16 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<String> putUser(@RequestBody User user) {
-        User updatedUser = userService.updateUser(user);
+        try {
+            userService.updateUser(user);
 
-        if (updatedUser != null)
             return ResponseEntity.ok().body("User was updated successfully.");
+        } catch (ChangeSetPersister.NotFoundException e) {
 
-        return ResponseEntity.status(503).body("Error occured while updating the user!");
+            return ResponseEntity.status(503).body("Error occured while updating the user!");
+        }
+
+
     }
 
     @DeleteMapping("/{id}")
