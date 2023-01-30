@@ -58,19 +58,19 @@ public class Filmwork {
 
     // Users which will watch, wont watch, have watched or is watching some movies or tv shows.
 
-    @ManyToMany(mappedBy = "plansToWatch", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "plansToWatch", fetch = FetchType.EAGER)
     @JsonBackReference("users-plans-to-watch-ref")
     protected Set<User> usersPlanToWatch;
 
-    @ManyToMany(mappedBy = "hasWatched", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "hasWatched", fetch = FetchType.EAGER)
     @JsonBackReference("users-watched-ref")
     protected Set<User> usersHaveWatched;
 
-    @ManyToMany(mappedBy = "isWatching", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "isWatching", fetch = FetchType.EAGER)
     @JsonBackReference("users-watching-ref")
     protected Set<User> usersWatching;
 
-    @ManyToMany(mappedBy = "wontWatch", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "wontWatch", fetch = FetchType.EAGER)
     @JsonBackReference("users-wont-watch-ref")
     protected Set<User> usersWontWatch;
 
