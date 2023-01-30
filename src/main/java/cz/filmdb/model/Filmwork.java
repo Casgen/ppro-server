@@ -74,8 +74,7 @@ public class Filmwork {
     @JsonBackReference("users-wont-watch-ref")
     protected Set<User> usersWontWatch;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    protected Set<FilmworkImage> imgPaths;
+    protected String img;
 
     public Filmwork(String name, Set<Genre> genres) {
         this.name = name;
@@ -112,7 +111,7 @@ public class Filmwork {
     }
 
     public Filmwork(Long id, String name, float audienceScore, float criticsScore, Set<Genre> genres,
-                    Set<Occupation> occupations, Set<Review> reviews, Set<FilmworkImage> images) {
+                    Set<Occupation> occupations, Set<Review> reviews, String image) {
         this(id, name);
         this.audienceScore = audienceScore;
         this.criticsScore = criticsScore;
@@ -120,7 +119,7 @@ public class Filmwork {
         this.occupations = occupations;
         this.reviews = reviews;
 
-        this.imgPaths = images;
+        this.img = image;
 
         initWatchLists();
     }
@@ -174,7 +173,7 @@ public class Filmwork {
         this.occupations = occupations;
         this.reviews = reviews;
 
-        this.imgPaths = new HashSet<>();
+        this.img = null;
 
         this.usersHaveWatched = new HashSet<>();
         this.usersWatching = new HashSet<>();
@@ -232,10 +231,6 @@ public class Filmwork {
     public void addToUsersWatching(User user) {
         this.usersWatching.add(user);
         user.getIsWatching().add(this);
-    }
-
-    public void addImg(FilmworkImage image) {
-        this.imgPaths.add(image);
     }
 
     @Override

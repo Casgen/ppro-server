@@ -26,11 +26,17 @@ public class Movie extends Filmwork {
         this.releaseDate = releaseDate;
     }
 
+    public Movie(String name, LocalDate releaseDate, Set<Genre> genres, String img) {
+        super(name, genres);
+        this.releaseDate = releaseDate;
+        this.img = img;
+    }
+
     public Movie() {}
 
     public Movie(Long id, String name, float audienceScore, float criticsScore, Set<Genre> genres,
-                 Set<Occupation> occupations, Set<Review> reviews, LocalDate releaseDate, Set<FilmworkImage> filmworkImages) {
-        super(id, name, audienceScore, criticsScore, genres, occupations, reviews,filmworkImages);
+                 Set<Occupation> occupations, Set<Review> reviews, LocalDate releaseDate, String image) {
+        super(id, name, audienceScore, criticsScore, genres, occupations, reviews, image);
         this.releaseDate = releaseDate;
     }
 

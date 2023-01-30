@@ -28,6 +28,9 @@ public class TVShowSerializer extends StdSerializer<TVShow> {
         jsonGenerator.writeNumberField("criticsScore", tvShow.getCriticsScore());
         jsonGenerator.writeStringField("runningFrom",tvShow.getRunningFrom().toString());
 
+        if (tvShow.getImg() != null)
+            jsonGenerator.writeStringField("img",tvShow.getImg());
+
         if (tvShow.getRunningTo() != null)
             jsonGenerator.writeStringField("runningTo",tvShow.getRunningTo().toString());
 
@@ -43,21 +46,6 @@ public class TVShowSerializer extends StdSerializer<TVShow> {
             }
 
             jsonGenerator.writeEndArray();
-        }
-
-        {
-            jsonGenerator.writeArrayFieldStart("imgPaths");
-
-            for (FilmworkImage image : tvShow.getImgPaths()) {
-                jsonGenerator.writeStartObject();
-                jsonGenerator.writeNumberField("id", image.getId());
-                jsonGenerator.writeBooleanField("isTitle", image.isTitle());
-                jsonGenerator.writeStringField("img", image.getImg());
-                jsonGenerator.writeEndObject();
-            }
-
-            jsonGenerator.writeEndArray();
-
         }
 
         // Occupations

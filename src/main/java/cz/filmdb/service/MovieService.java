@@ -52,7 +52,7 @@ public class MovieService {
         updatedMovie.setGenres(oldMovie.getGenres());
         updatedMovie.setReviews(oldMovie.getReviews());
         updatedMovie.setOccupations(oldMovie.getOccupations());
-        updatedMovie.setImgPaths(oldMovie.getImgPaths());
+        updatedMovie.setImg(oldMovie.getImg());
 
         return movieRepository.save(updatedMovie);
     }

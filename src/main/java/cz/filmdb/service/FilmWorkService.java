@@ -37,6 +37,9 @@ public class FilmWorkService {
             Filmwork filmwork = optFilmwork.get();
             Path path = Paths.get("files","imgs", "filmwork");
 
+            if (filmwork.getImg() != null)
+                storageService.delete(Paths.get(filmwork.getImg()));
+
             storageService.store(file, path);
 
             Path src = path.resolve(file.getOriginalFilename());
@@ -45,9 +48,7 @@ public class FilmWorkService {
             // This renames the given file to a unique identifier
             storageService.move(src, dst);
 
-            FilmworkImage filmworkImage = new FilmworkImage(false,dst.toString());
-            filmwork.addImg(filmworkImage);
-
+            filmwork.setImg(dst.toString());
             filmworkRepository.save(filmwork);
 
         } catch (Exception e) {
