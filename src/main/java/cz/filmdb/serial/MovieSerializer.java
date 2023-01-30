@@ -28,6 +28,9 @@ public class MovieSerializer extends StdSerializer<Movie> {
             jsonGenerator.writeNumberField("criticsScore", movie.getCriticsScore());
             jsonGenerator.writeStringField("releaseDate",movie.getReleaseDate().toString());
 
+            if (movie.getImg() != null)
+                jsonGenerator.writeStringField("img",movie.getImg());
+
             // Genres
             jsonGenerator.writeArrayFieldStart("genres");
 
@@ -37,18 +40,6 @@ public class MovieSerializer extends StdSerializer<Movie> {
                     jsonGenerator.writeStringField("name", genre.getName());
                     jsonGenerator.writeEndObject();
                 }
-
-            jsonGenerator.writeEndArray();
-
-            jsonGenerator.writeArrayFieldStart("imgPaths");
-
-            for (FilmworkImage image : movie.getImgPaths()) {
-                jsonGenerator.writeStartObject();
-                jsonGenerator.writeNumberField("id", image.getId());
-                jsonGenerator.writeBooleanField("isTitle", image.isTitle());
-                jsonGenerator.writeStringField("img", image.getImg());
-                jsonGenerator.writeEndObject();
-            }
 
             jsonGenerator.writeEndArray();
 

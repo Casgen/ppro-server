@@ -1,5 +1,6 @@
 package cz.filmdb.controller;
 
+import cz.filmdb.model.AuthenticationResponse;
 import cz.filmdb.model.Filmwork;
 import cz.filmdb.model.User;
 import cz.filmdb.service.JwtService;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
@@ -51,7 +53,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<String> putUser(@RequestBody User user, HttpServletRequest request) {
+    public AuthenticationResponse putUser(@RequestBody User user, HttpServletRequest request) {
         try {
             Long userId = Long.valueOf(jwtService.extractUserId(retrieveToken(request)));
 
@@ -62,11 +64,13 @@ public class UserController {
 
             userService.updateUser(user);
 
-            return ResponseEntity.ok().body("User was updated successfully.");
+            String newToken = jwtService.generateToken(user, user.getId(), user.getUserRole());
+
+            return new AuthenticationResponse(newToken);
         } catch (ChangeSetPersister.NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(String.format("Error occured while updating the user! %s", e.getMessage()));
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED,String.format("Error occured while updating the user! %s", e.getMessage()));
         } catch (AuthorizationServiceException e) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(String.format("Error occured while updating the user! %s", e.getMessage()));
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED,String.format("Error occured while updating the user! %s", e.getMessage()));
         }
     }
 

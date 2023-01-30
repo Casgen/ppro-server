@@ -39,40 +39,14 @@ public class TVShowDeserializer extends StdDeserializer<TVShow> {
         LocalDate runningTo = rootNode.has("runningTo") ? LocalDate.parse(rootNode.get("runningTo").asText()) : null;
         float audienceScore = (float) (rootNode.has("audienceScore") ? rootNode.get("audienceScore").asDouble() : 0.0);
         float criticsScore = (float) (rootNode.has("criticsScore") ? rootNode.get("criticsScore").asDouble() : 0.0);
+        String img = (rootNode.has("img") ? rootNode.get("img").asText() : null);
 
         Set<Genre> genres = getGenres(rootNode);
         Set<Occupation> occupations = getOccupations(rootNode);
         Set<Review> reviews = getReviews(rootNode);
-        Set<FilmworkImage> images = getImages(rootNode);
 
         return new TVShow(id, name, audienceScore, criticsScore,
-                genres, occupations, reviews, numberOfSeasons, runningFrom, runningTo, images);
-    }
-
-    private Set<FilmworkImage> getImages(JsonNode rootNode) {
-
-        if (!rootNode.has("imgPaths"))
-            return Set.of();
-
-        JsonNode imgsSetNode = rootNode.get("imgPaths");
-
-        Set<FilmworkImage> images = new HashSet<>();
-
-        Long id;
-        String path;
-        boolean isTitle;
-
-        for (JsonNode imgNode : imgsSetNode) {
-
-            id = imgNode.get("id").asLong();
-            path = imgNode.get("img").asText();
-            isTitle = imgNode.has("isTitle") ? imgNode.get("isTitle").asBoolean() : false;
-
-            images.add(new FilmworkImage(id, isTitle, path));
-
-        }
-
-        return images;
+                genres, occupations, reviews, numberOfSeasons, runningFrom, runningTo, img);
     }
 
     private Set<Genre> getGenres(JsonNode rootNode) {

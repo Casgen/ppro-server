@@ -1,7 +1,6 @@
 package cz.filmdb.service;
 
 import cz.filmdb.model.TVShow;
-import cz.filmdb.model.User;
 import cz.filmdb.repo.TVShowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -46,7 +45,7 @@ public class TVShowService {
         updatedTvShow.setGenres(oldTvShow.getGenres());
         updatedTvShow.setReviews(oldTvShow.getReviews());
         updatedTvShow.setOccupations(oldTvShow.getOccupations());
-        updatedTvShow.setImgPaths(oldTvShow.getImgPaths());
+        updatedTvShow.setImg(oldTvShow.getImg());
 
         return tvShowRepository.save(updatedTvShow);
     }

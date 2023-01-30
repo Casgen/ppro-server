@@ -97,7 +97,7 @@ public class UserService implements UserDetailsService {
         if (updatedUser.getUserRole() == null)
             updatedUser.setUserRole(oldUser.getUserRole());
 
-        if (updatedUser.getPassword() != null) {
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
 
             String updatedPassword = passwordEncoder.encode(updatedUser.getPassword());
 
@@ -107,9 +107,13 @@ public class UserService implements UserDetailsService {
                 updatedUser.setPassword(oldUser.getPassword());
             }
 
+            updatedUser.setProfileImg(oldUser.getProfileImg());
+            updatedUser.setEmail(oldUser.getEmail());
+
             return userRepository.save(updatedUser);
         }
 
+        updatedUser.setProfileImg(oldUser.getProfileImg());
         updatedUser.setEmail(oldUser.getEmail());
         updatedUser.setPassword(oldUser.getPassword());
 
