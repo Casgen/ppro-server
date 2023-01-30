@@ -60,13 +60,33 @@ public class FlmDBConfig {
             Person samWorthington = new Person("Sam", "Worthington");
             Person zoeSaldana = new Person("Zoe", "Saldana");
 
+            Person francisCoppola = new Person("Francis", "Coppola");
+            Person marioPuzo = new Person("Mario", "Puzo");
+            Person marlonBrando = new Person("Marlon", "Brando");
+            Person alPacino = new Person("Al", "Pacino");
+            Person jamesCaan = new Person("James", "Caan");
+
+            Person tomHanks = new Person("Tom", "Hanks");
+            Person robertZemeckis = new Person("Robert", "Zemeckis");
+            Person winstonGroom = new Person("Winston", "Groom");
+            Person ericRoth = new Person("Eric", "Roth");
+            Person robinWright = new Person("Robin", "Wright");
+            Person garySinise = new Person("Gary", "Sinise");
+
+            Person johnTravolta = new Person("John", "Travolta");
+            Person samuelJackson = new Person("Samuel", "Jackson");
+
             // -----------
 
             Person steveCarrel = new Person("Steve", "Carrel");
             Person jennaFischer = new Person("Jenna", "Fischer");
             Person johnKrasinski = new Person("John", "Krasinski");
+            Person gregDaniels = new Person("Greg", "Daniels");
 
 
+            Person amyPoehler = new Person("Amy", "Poehler");
+            Person jimoHeir = new Person("Jim", "O'Heir");
+            Person nickOfferman = new Person("Nick", "Offerman");
 
             people.add(ridleyScott);
             people.add(sigourneyWeaver);
@@ -86,9 +106,30 @@ public class FlmDBConfig {
             people.add(samWorthington);
             people.add(zoeSaldana);
 
+            people.add(francisCoppola);
+            people.add(marioPuzo);
+            people.add(marlonBrando);
+            people.add(alPacino);
+            people.add(jamesCaan);
+
+            people.add(tomHanks);
+            people.add(robertZemeckis);
+            people.add(winstonGroom);
+            people.add(ericRoth);
+            people.add(robinWright);
+            people.add(garySinise);
+
+            people.add(johnTravolta);
+            people.add(samuelJackson);
+
             people.add(steveCarrel);
             people.add(jennaFischer);
             people.add(johnKrasinski);
+
+            people.add(gregDaniels);
+            people.add(amyPoehler);
+            people.add(jimoHeir);
+            people.add(nickOfferman);
 
             personRepository.saveAll(people);
 
@@ -100,6 +141,7 @@ public class FlmDBConfig {
             Genre scifi = new Genre("Sci-fi");
             Genre mockumentary = new Genre("Mockumentary");
             Genre comedy = new Genre("Comedy");
+            Genre romance = new Genre("Romance");
 
             // ATTENTION: We don't have to persist the genres if they are referenced by a movie or a TV Show.
             // if we save for example the movies, the saving will also propagate to the genres implicitly.
@@ -113,34 +155,66 @@ public class FlmDBConfig {
             Filmwork alien = new Movie("Alien", LocalDate.of(1979,3,13), Set.of(scifi, horror));
             Filmwork killBill = new Movie("Kill Bill Vol. 1", LocalDate.of(2003, 9, 29), Set.of(action,crime,drama));
             Filmwork avatar = new Movie("Avatar", LocalDate.of(2009, 9, 23), Set.of(action, scifi));
+            Filmwork theGodfather = new Movie("The Godfather", LocalDate.of(1972, 8,30), Set.of(crime, drama));
+            Filmwork forrestGump = new Movie("Forrest Gump", LocalDate.of(1994, 2,15), Set.of(romance, drama));
+            Filmwork pulpFiction = new Movie("Pulp Fiction", LocalDate.of(1994, 4,2), Set.of(drama, crime));
 
             // TVShows
             Filmwork theOffice = new TVShow("The Office", LocalDate.of(2005, 3, 16),LocalDate.of(2013, 5, 16), Set.of(comedy, mockumentary), 9);
+            Filmwork parksAndRecreation = new TVShow("Parks and Recreation", LocalDate.of(2009, 3, 16),LocalDate.of(2015, 5, 16), Set.of(comedy, mockumentary), 7);
 
             // FILMWORKS ARE PERSISTED THROUGH THE USERS!
 
-            List<User> users = new ArrayList<>();
+            filmworkRepository.saveAll(Set.of(alien,killBill,avatar,theGodfather,theOffice, parksAndRecreation, pulpFiction, forrestGump));
 
-            User basicJoe = new User("basicjoe231", "basic.joe@gmail.com", "123456", UserRole.USER);
-            User mckinsley = new User("mckinsley", "mckinsley87@gmail.com", "123456", UserRole.USER);
-            User elenorRigby = new User("elenorRigby", "elenor.Rigby@gmail.com", "3890jdfhs", UserRole.USER);
+            authenticationService.register(new RegisterRequest("basicjoe231", "basic.joe@gmail.com", "123456"));
+            authenticationService.register(new RegisterRequest("mckinsley", "mckinsley87@gmail.com", "123456"));
+            authenticationService.register(new RegisterRequest("elenorRigby", "elenor.Rigby@gmail.com", "123456789"));
+            authenticationService.register(new RegisterRequest("theUltimate", "the.ultimate@gmail.com", "123456789"));
+            authenticationService.register(new RegisterRequest("THXsound", "that.thx.sound@gmail.com", "thxsound"));
+
+            User basicJoe = userRepository.findByUsername("basicjoe231");
 
             basicJoe.addToPlansToWatch(killBill);
             basicJoe.addToHasWatched(alien);
             basicJoe.addToHasWatched(avatar);
+            basicJoe.addToHasWatched(forrestGump);
+
+            userRepository.save(basicJoe);
+
+            User mckinsley = userRepository.findByUsername("mckinsley");
 
             mckinsley.addToPlansToWatch(theOffice);
             mckinsley.addToPlansToWatch(alien);
             mckinsley.addToWatching(theOffice);
 
+            userRepository.save(mckinsley);
+
+            User elenorRigby = userRepository.findByUsername("elenorRigby");
+
             elenorRigby.addToWatching(avatar);
             elenorRigby.addToHasWatched(killBill);
+            elenorRigby.addToHasWatched(pulpFiction);
 
-            users.add(basicJoe);
-            users.add(mckinsley);
-            users.add(elenorRigby);
+            userRepository.save(elenorRigby);
 
-            userRepository.saveAll(users);
+            User theUltimate = userRepository.findByUsername("theUltimate");
+
+            theUltimate.addToHasWatched(theGodfather);
+            theUltimate.addToPlansToWatch(parksAndRecreation);
+            theUltimate.addToWatching(forrestGump);
+
+            userRepository.save(theUltimate);
+
+            User thx = userRepository.findByUsername("THXsound");
+
+            thx.addToPlansToWatch(killBill);
+            thx.addToHasWatched(alien);
+            thx.addToHasWatched(avatar);
+            thx.addToHasWatched(forrestGump);
+            thx.addToWatching(pulpFiction);
+
+            userRepository.save(thx);
 
             //Filmwork occupations
             Map<Person, List<RoleType>> alienOccupations = new HashMap<>();
@@ -172,24 +246,60 @@ public class FlmDBConfig {
             theOfficeOccupations.put(jennaFischer, List.of(RoleType.ACTOR));
             theOfficeOccupations.put(johnKrasinski, List.of(RoleType.ACTOR));
 
+            Map<Person, List<RoleType>> theGodfatherOccupations = new HashMap<>();
+            theGodfatherOccupations.put(francisCoppola, List.of(RoleType.DIRECTOR));
+            theGodfatherOccupations.put(marioPuzo, List.of(RoleType.WRITER));
+            theGodfatherOccupations.put(marlonBrando, List.of(RoleType.ACTOR));
+            theGodfatherOccupations.put(alPacino, List.of(RoleType.ACTOR));
+            theGodfatherOccupations.put(jamesCaan, List.of(RoleType.ACTOR));
+
+            Map<Person, List<RoleType>> forrestGumpOccupations = new HashMap<>();
+            forrestGumpOccupations.put(robertZemeckis, List.of(RoleType.DIRECTOR));
+            forrestGumpOccupations.put(winstonGroom, List.of(RoleType.WRITER));
+            forrestGumpOccupations.put(ericRoth, List.of(RoleType.WRITER));
+            forrestGumpOccupations.put(tomHanks, List.of(RoleType.ACTOR));
+            forrestGumpOccupations.put(robinWright, List.of(RoleType.ACTOR));
+            forrestGumpOccupations.put(garySinise, List.of(RoleType.ACTOR));
+
+            Map<Person, List<RoleType>> pulpFictionOccupations = new HashMap<>();
+            pulpFictionOccupations.put(quentinTarantino, List.of(RoleType.DIRECTOR, RoleType.ACTOR, RoleType.WRITER));
+            pulpFictionOccupations.put(johnTravolta, List.of(RoleType.ACTOR));
+            pulpFictionOccupations.put(samuelJackson, List.of(RoleType.ACTOR));
+            pulpFictionOccupations.put(umaThurman, List.of(RoleType.ACTOR));
+
+            Map<Person, List<RoleType>> parksAndRecreationOccupations = new HashMap<>();
+            parksAndRecreationOccupations.put(gregDaniels, List.of(RoleType.CREATOR));
+            parksAndRecreationOccupations.put(amyPoehler, List.of(RoleType.ACTOR));
+            parksAndRecreationOccupations.put(jimoHeir, List.of(RoleType.ACTOR));
+            parksAndRecreationOccupations.put(nickOfferman, List.of(RoleType.ACTOR));
+
             alien.setOccupations(alienOccupations);
             avatar.setOccupations(avatarOccupations);
             killBill.setOccupations(killBillOccupations);
             theOffice.setOccupations(theOfficeOccupations);
+            theGodfather.setOccupations(theGodfatherOccupations);
+            forrestGump.setOccupations(forrestGumpOccupations);
+            pulpFiction.setOccupations(pulpFictionOccupations);
+            parksAndRecreation.setOccupations(parksAndRecreationOccupations);
 
             occupationRepository.saveAll(Occupation.of(alien,alienOccupations));
             occupationRepository.saveAll(Occupation.of(killBill,killBillOccupations));
             occupationRepository.saveAll(Occupation.of(avatar,avatarOccupations));
             occupationRepository.saveAll(Occupation.of(theOffice,theOfficeOccupations));
-
+            occupationRepository.saveAll(Occupation.of(theGodfather,theGodfatherOccupations));
+            occupationRepository.saveAll(Occupation.of(theGodfather,forrestGumpOccupations));
+            occupationRepository.saveAll(Occupation.of(pulpFiction,pulpFictionOccupations));
+            occupationRepository.saveAll(Occupation.of(parksAndRecreation,parksAndRecreationOccupations));
 
             List<Review> reviews = new ArrayList<>();
 
-            reviews.add(new Review(basicJoe, alien, "What a banger film.", 10.0f));
-            reviews.add(new Review(elenorRigby, killBill, "One of the goriest tarantino movies.", 9.7f));
-            reviews.add(new Review(mckinsley, killBill, "Classic.", 9.0f));
-            reviews.add(new Review(mckinsley, avatar, "ngl, kinda mid.", 5.0f));
-            reviews.add(new Review(basicJoe, avatar, "cringey.", 2.3f));
+            reviews.add(new Review(basicJoe, alien, "What a banger film. For it's time it was really something", 10.0f));
+            reviews.add(new Review(elenorRigby, killBill, "One of the goriest tarantino movies. And the best ones", 9.7f));
+            reviews.add(new Review(mckinsley, killBill, "Classic. That's all that is needed to be said", 9.0f));
+            reviews.add(new Review(mckinsley, avatar, "I really liked the movie.", 8.0f));
+            reviews.add(new Review(basicJoe, avatar, "The film is kinda mid, but visually beautiful for it's time.", 6.0f));
+            reviews.add(new Review(basicJoe, forrestGump, "Very breathtaking. And the storytelling...oh my gosh", 9.0f));
+            reviews.add(new Review(theUltimate, theGodfather, "I mean what can I say. Godfather is one of my favorite movies. Very well written and the actors are magnificent!", 9.5f));
 
             reviewRepository.saveAll(reviews);
 

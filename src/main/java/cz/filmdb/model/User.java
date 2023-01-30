@@ -55,7 +55,7 @@ public class User implements UserDetails {
 
 
     // Users which will watch, wont watch, have watched or is watching some movies or tv shows.
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "plans_to_watch",
             joinColumns = {
                     @JoinColumn(name = "user_id"),
@@ -67,7 +67,7 @@ public class User implements UserDetails {
     @JsonManagedReference("users-plans-to-watch-ref")
     private Set<Filmwork> plansToWatch = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "is_watching",
             joinColumns = {
                     @JoinColumn(name = "user_id"),
@@ -79,7 +79,7 @@ public class User implements UserDetails {
     @JsonManagedReference("users-watching-ref")
     private Set<Filmwork> isWatching = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "wont_watch",
             joinColumns = {
                     @JoinColumn(name = "user_id"),
@@ -91,7 +91,7 @@ public class User implements UserDetails {
     @JsonManagedReference("users-wont-watch-ref")
     private Set<Filmwork> wontWatch = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "have_watched",
             joinColumns = {
                     @JoinColumn(name = "user_id"),
