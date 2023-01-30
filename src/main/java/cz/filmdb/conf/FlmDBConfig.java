@@ -150,14 +150,15 @@ public class FlmDBConfig {
 
             //genreRepository.saveAll(List.of(horror,action,crime,drama,scifi));
 
+            String filmworkImgDir = "files/imgs/filmwork/";
 
             // Movies
-            Filmwork alien = new Movie("Alien", LocalDate.of(1979,3,13), Set.of(scifi, horror));
-            Filmwork killBill = new Movie("Kill Bill Vol. 1", LocalDate.of(2003, 9, 29), Set.of(action,crime,drama));
-            Filmwork avatar = new Movie("Avatar", LocalDate.of(2009, 9, 23), Set.of(action, scifi));
-            Filmwork theGodfather = new Movie("The Godfather", LocalDate.of(1972, 8,30), Set.of(crime, drama));
-            Filmwork forrestGump = new Movie("Forrest Gump", LocalDate.of(1994, 2,15), Set.of(romance, drama));
-            Filmwork pulpFiction = new Movie("Pulp Fiction", LocalDate.of(1994, 4,2), Set.of(drama, crime));
+            Filmwork alien = new Movie("Alien", LocalDate.of(1979,3,13), Set.of(scifi, horror), filmworkImgDir + "1675078874690-5");
+            Filmwork killBill = new Movie("Kill Bill Vol. 1", LocalDate.of(2003, 9, 29), Set.of(action,crime,drama), filmworkImgDir + "1675078954928-1");
+            Filmwork avatar = new Movie("Avatar", LocalDate.of(2009, 9, 23), Set.of(action, scifi), filmworkImgDir + "1675078947653-4");
+            Filmwork theGodfather = new Movie("The Godfather", LocalDate.of(1972, 8,30), Set.of(crime, drama), filmworkImgDir + "1675078898996-3");
+            Filmwork forrestGump = new Movie("Forrest Gump", LocalDate.of(1994, 2,15), Set.of(romance, drama), filmworkImgDir + "1675078797949-7");
+            Filmwork pulpFiction = new Movie("Pulp Fiction", LocalDate.of(1994, 4,2), Set.of(drama, crime), filmworkImgDir + "1675078993872-8");
 
             // TVShows
             Filmwork theOffice = new TVShow("The Office", LocalDate.of(2005, 3, 16),LocalDate.of(2013, 5, 16), Set.of(comedy, mockumentary), 9);
